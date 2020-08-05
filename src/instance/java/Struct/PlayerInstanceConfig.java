@@ -18,7 +18,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 public class PlayerInstanceConfig
 {
@@ -31,6 +30,10 @@ public class PlayerInstanceConfig
     private final boolean playerOwnInventory;
 
     private PlayerInstance[] instances = null;
+
+    private int groupSize;
+
+    private int groupMinSize;
 
     private InstancesTyp instancesTyp;
 
@@ -87,6 +90,16 @@ public class PlayerInstanceConfig
         return tasks;
     }
 
+    public int getGroupMinSize()
+    {
+        return groupMinSize;
+    }
+
+    public int getGroupSize()
+    {
+        return groupSize;
+    }
+
     public PlayerInstanceConfig(String path)
     {
         File f = new File(path);
@@ -97,6 +110,8 @@ public class PlayerInstanceConfig
         this.groupLives = cfg.getInt("general.groupLives");
         this.playerOwnInventory =  cfg.getBoolean("general.playerOwnInventory");
         this.instancesTyp =  InstancesTyp.valueOf(cfg.getString("general.instancesTyp"));
+        this.groupSize =  cfg.getInt("general.groupsize");
+        this.groupMinSize =  cfg.getInt("general.groupminsize");
         PlayerVisitInstanceManager.getInstance().addInstance(instanceName);
         boolean isnext = true;
         int count = 0;
@@ -142,7 +157,15 @@ public class PlayerInstanceConfig
                 isnext = false;
             }
         }
-
+        if (createInstances())
+        {
+            Bukkit.getLogger().info(instanceName+": loaded!");
+        }
+        else
+        {
+            Bukkit.getLogger().info(instanceName+": can not load!");
+            return;
+        }
         if (instancesTyp == InstancesTyp.Waves)
         {
             boolean isnext2;
@@ -182,20 +205,10 @@ public class PlayerInstanceConfig
             }
 
         }
-
-        if (createInstances())
-        {
-            Bukkit.getLogger().info(instanceName+": loaded!");
-        }
-        else
-        {
-            Bukkit.getLogger().info(instanceName+": can not load!");
-        }
     }
 
     private boolean createInstances()
     {
-        instances = new PlayerInstance[0];
         File folder = new File(Instances.getInstance().getDataFolder() + "/instances/"+instanceName);
         if (!folder.exists())
         {
@@ -209,7 +222,7 @@ public class PlayerInstanceConfig
             instances = new PlayerInstance[result.size()];
             for (int i = 0; i < result.size(); i++)
             {
-                instances[i] = new PlayerInstance(result.get(i));
+                instances[i] = new PlayerInstance(this,result.get(i));
             }
             return true;
         }
@@ -236,7 +249,7 @@ public class PlayerInstanceConfig
     {
         for (PlayerInstance pi: instances)
         {
-            for (Player pl : pi.getGroup().getGroup())
+            for (Player pl : pi.getMyGroup().getGroup())
             {
                 if (pl != null)
                 {
@@ -254,7 +267,7 @@ public class PlayerInstanceConfig
     {
         for (PlayerInstance pi: instances)
         {
-            for (Player pl : pi.getGroup().getGroup())
+            for (Player pl : pi.getMyGroup().getGroup())
             {
                 if (pl != null)
                 {
@@ -272,13 +285,13 @@ public class PlayerInstanceConfig
     {
         for (PlayerInstance pi: instances)
         {
-            for (Player pl : pi.getGroup().getGroup())
+            for (Player pl : pi.getMyGroup().getGroup())
             {
                 if (pl != null)
                 {
                     if (pl.getUniqueId() == p.getUniqueId())
                     {
-                        pi.getGroup().removePlayer(pl,disconnect);
+                        pi.getMyGroup().removePlayer(pl,disconnect);
                         return;
                     }
                 }

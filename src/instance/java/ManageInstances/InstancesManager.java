@@ -2,10 +2,14 @@ package instance.java.ManageInstances;
 
 import instance.java.Instances;
 import instance.java.Struct.PlayerInstanceConfig;
+import instance.java.Utility.Utility;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -28,7 +32,34 @@ public class InstancesManager
 
     public void loadInstances()
     {
+        File folder = new File(Instances.getInstance().getDataFolder() + "/instances");
+        if (!folder.exists())
+        {
+            folder.mkdir();
+        }
+        List<String> result = new ArrayList<>();
+        Utility.search(".*\\.yml", folder, result);
+        for (String path: result)
+        {
+            instances.add(new PlayerInstanceConfig(path));
+        }
+    }
 
+    public List<PlayerInstanceConfig> getInstances()
+    {
+        return instances;
+    }
+
+    public PlayerInstanceConfig getPlayerInstanceConfig(String name)
+    {
+        for (PlayerInstanceConfig pic: instances)
+        {
+            if (pic.getInstanceName().equals(name))
+            {
+                return pic;
+            }
+        }
+        return null;
     }
 
     public String getInstanceOfPlayer(String playerName)

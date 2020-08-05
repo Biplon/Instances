@@ -1,5 +1,12 @@
 package instance.java.ManageInstances;
 
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
 import instance.java.Enum.InstancesTyp;
 import instance.java.Group.Group;
 import instance.java.Instances;
@@ -16,18 +23,23 @@ import org.apache.commons.lang.text.StrSubstitutor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import java.io.File;
 import java.util.*;
 
 public class PlayerInstance
 {
-    private PlayerInstanceConfig myConfig;
+    private final PlayerInstanceConfig myConfig;
 
-    private World world;
+    private final World myWorld;
 
-    private Group group;
+    private final Group myGroup;
+
+    private ProtectedRegion myRegion;
 
     private boolean istaskactive = false;
 
@@ -55,9 +67,9 @@ public class PlayerInstance
         inuse = true;
     }
 
-    public Group getGroup()
+    public Group getMyGroup()
     {
-        return group;
+        return myGroup;
     }
 
     public PlayerSpawnpoint getActivePlayerSpawn()
@@ -65,22 +77,71 @@ public class PlayerInstance
         return activePlayerSpawn;
     }
 
-    public PlayerInstance(String path)
+    public PlayerInstanceConfig getMyConfig()
     {
+        return myConfig;
+    }
+
+    public PlayerInstance(PlayerInstanceConfig config, String path)
+    {
+        File f = new File(path);
+        FileConfiguration cfg = YamlConfiguration.loadConfiguration(f);
+        myConfig = config;
+        myWorld = Bukkit.getWorld(Objects.requireNonNull(cfg.getString("general.worldname")));
+        myGroup = new Group(this,config.getGroupMinSize(),config.getGroupSize());
+        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        assert myWorld != null;
+        RegionManager regions = container.get(BukkitAdapter.adapt(myWorld));
+        assert regions != null;
+        myRegion = regions.getRegion(Objects.requireNonNull(cfg.getString("general.regionname")));
+        boolean isnext = true;
+        int count = 0;
+        String[] coords;
+        while (isnext)
+        {
+            if (cfg.getString("creatureSpawnPoints." + count + ".coords") != null)
+            {
+                coords = cfg.getString("spawnpoints." + count + ".coords").split(",");
+                creatureSpawnPoints.add(new CreatureSpawnPoint(count, myWorld, Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2])));
+                count++;
+            }
+            else
+            {
+                isnext = false;
+            }
+        }
+
+        isnext = true;
+        count = 0;
+        while (isnext)
+        {
+            if (cfg.getString("playerSpawnpoints." + count + ".coords") != null)
+            {
+                coords = cfg.getString("playerspawnpoints." + count + ".coords").split(",");
+
+                playerSpawnpoints.add(new PlayerSpawnpoint(count, myWorld, Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2])));
+                count++;
+            }
+            else
+            {
+                isnext = false;
+            }
+        }
+        activePlayerSpawn = playerSpawnpoints.get(0);
     }
 
 
     public boolean prepareStart()
     {
-        if (group.isFull())
+        if (myGroup.isFull())
         {
             inuse = true;
 
             if (!myConfig.getPlayerOwnInventory())
             {
-                group.saveInventory();
+                myGroup.saveInventory();
             }
-            group.savePlayerloc();
+            myGroup.savePlayerloc();
             teleportPlayerToInstance();
 
             Bukkit.getScheduler().runTaskLaterAsynchronously(Instances.getInstance(), this::startInstance, 2);
@@ -91,7 +152,7 @@ public class PlayerInstance
 
     public void startInstance()
     {
-        for (Player p : group.getGroup())
+        for (Player p : myGroup.getGroup())
         {
             if (!myConfig.getPlayerOwnInventory())
             {
@@ -104,12 +165,11 @@ public class PlayerInstance
         }
         if (myConfig.getInstancesTyp() == InstancesTyp.Waves)
         {
-            Bukkit.getScheduler().runTaskLaterAsynchronously(Instances.getInstance(), this::initWaveStart, 200);
+            Bukkit.getScheduler().runTaskLaterAsynchronously(Instances.getInstance(), this::initTaskStart, 200);
         }
-
     }
 
-    public void initWaveStart()
+    public void initTaskStart()
     {
         if (myConfig.getTasks().get(taskcount) instanceof TaskCreatureWave)
         {
@@ -130,7 +190,8 @@ public class PlayerInstance
 
     public void startTaskEvent()
     {
-
+        //magic
+        initTaskStart();
     }
 
     public void startTaskCreatureWave()
@@ -157,7 +218,7 @@ public class PlayerInstance
                     data.put("x", "" + sp.loc.getBlockX());
                     data.put("y", "" + sp.loc.getBlockY());
                     data.put("z", "" + sp.loc.getBlockZ());
-                    data.put("world", world.getName());
+                    data.put("world", myWorld.getName());
                     String formattedString = StrSubstitutor.replace("mo lspawn ${type} ${number} ${x} ${y} ${z} ${world}", data);
                     Bukkit.getScheduler().callSyncMethod(Instances.getInstance(), () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), formattedString));
                     data.clear();
@@ -180,7 +241,7 @@ public class PlayerInstance
         grouplivescurrent = myConfig.getGroupLives();
         activePlayerSpawn = playerSpawnpoints.get(0);
         killEnemyList();
-        group.clearGroup();
+        myGroup.clearGroup();
 
     }
 
@@ -227,7 +288,7 @@ public class PlayerInstance
             }
             else
             {
-                initWaveStart();
+                initTaskStart();
             }
         }
     }
@@ -258,9 +319,9 @@ public class PlayerInstance
         teleportPlayersBack();
         if (!myConfig.getPlayerOwnInventory())
         {
-            group.restoreInventory();
+            myGroup.restoreInventory();
         }
-        for (Player p : group.getGroup())
+        for (Player p : myGroup.getGroup())
         {
             if (win)
             {
@@ -291,7 +352,7 @@ public class PlayerInstance
 
     public void teleportPlayerToInstance()
     {
-        for (Player p : group.getGroup())
+        for (Player p : myGroup.getGroup())
         {
             if (p != null)
             {
@@ -302,11 +363,11 @@ public class PlayerInstance
 
     public void teleportPlayersBack()
     {
-        for (int i = 0; i < group.getGroup().length; i++)
+        for (int i = 0; i < myGroup.getGroup().length; i++)
         {
-            if (group.getGroup()[i] != null)
+            if (myGroup.getGroup()[i] != null)
             {
-                group.getGroup()[i].teleport(group.getPlayerLocation()[i]);
+                myGroup.getGroup()[i].teleport(myGroup.getPlayerLocation()[i]);
             }
         }
     }
@@ -318,7 +379,7 @@ public class PlayerInstance
 
     public void sendMessage(String msg)
     {
-        for (Player p : group.getGroup())
+        for (Player p : myGroup.getGroup())
         {
             if (p != null)
             {
@@ -329,7 +390,7 @@ public class PlayerInstance
 
     public void sendActionbarMessage(String msg)
     {
-        for (Player p : group.getGroup())
+        for (Player p : myGroup.getGroup())
         {
             if (p != null)
             {

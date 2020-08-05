@@ -12,11 +12,6 @@ public class Utility
         {
             for (final File f : Objects.requireNonNull(folder.listFiles()))
             {
-                if (f.isDirectory())
-                {
-                    search(pattern, f, result);
-                }
-
                 if (f.isFile())
                 {
                     if (f.getName().matches(pattern))
