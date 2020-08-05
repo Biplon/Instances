@@ -12,3 +12,10 @@ permissions:
   instances.player:
     description: player
     default: op
+commands:
+  ijoin:
+    description: join instance
+    usage: /ijoin [playername] <instancename>
+  ileave:
+    description: leave instance
+    usage: /ileave [playername]

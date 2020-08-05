@@ -6,13 +6,13 @@ public class CreatureWaveEntity
 
     public final int amount;
 
-    public final CreatureSpawnPoint sp;
+    public final int creaturespawnpointid;
 
-    public CreatureWaveEntity(String mobname, int amount, CreatureSpawnPoint sp)
+    public CreatureWaveEntity(String mobname, int amount, int sp)
     {
         this.mobname = mobname;
         this.amount = amount;
-        this.sp = sp;
+        this.creaturespawnpointid = sp;
     }
 
     @Override
@@ -21,7 +21,7 @@ public class CreatureWaveEntity
         return "CreatureWaveEntity{" +
                 "mobname='" + mobname + '\'' +
                 ", amount=" + amount +
-                ", sp=" + sp +
+                ", sp=" + creaturespawnpointid +
                 '}';
     }
 }

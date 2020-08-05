@@ -1,6 +1,7 @@
 package instance.java.Command;
 
 import instance.java.GUI.GUIManager;
+import instance.java.ManageInstances.InstancesManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -23,7 +24,14 @@ public class CommandJoinInstance implements CommandExecutor
             {
                 if (args.length == 1)
                 {
-                    GUIManager.getInstance().openJoinInstanceGUI(player,args[0]);
+                    if (InstancesManager.getInstance().canJoin(player,args[0]))
+                    {
+                        GUIManager.getInstance().openJoinInstanceGUI(player,args[0]);
+                    }
+                    else
+                    {
+                        player.sendMessage("Can not join instance. Max visits per hour or already in a group");
+                    }
                     return true;
                 }
                 else
@@ -36,7 +44,14 @@ public class CommandJoinInstance implements CommandExecutor
         {
             if (args.length == 2)
             {
-                GUIManager.getInstance().openJoinInstanceGUI(Bukkit.getPlayer(args[1]),args[0]);
+                if (InstancesManager.getInstance().canJoin(Bukkit.getPlayer(args[1]),args[0]))
+                {
+                    GUIManager.getInstance().openJoinInstanceGUI(Bukkit.getPlayer(args[1]),args[0]);
+                }
+                else
+                {
+                    commandSender.sendMessage("Player can not join instance. Max visits per hour or already in a group");
+                }
                 return true;
             }
             else

@@ -27,4 +27,9 @@ public class GUIManager
     {
 
     }
+
+    public void openReadyCheckGUI(Player p)
+    {
+
+    }
 }

@@ -1,22 +1,21 @@
-package instance.java.Struct;
+package instance.java.Task;
+
+import instance.java.Struct.CreatureWaveEntity;
 
 import java.util.ArrayList;
 
-public class CreatureWave
+public class TaskCreatureWave extends Task
 {
     public final int waveid;
 
-    public final double waveprecountdown;
-
-    public final boolean autostart;
-
     public final ArrayList<CreatureWaveEntity> waveMonsters = new ArrayList();
 
-    public CreatureWave(int waveid, double waveprecountdown, boolean autostart)
+    public TaskCreatureWave(int waveid, double waveprecountdown, boolean autostart,int number)
     {
         this.waveid = waveid;
-        this.waveprecountdown = waveprecountdown;
+        this.precountdown = waveprecountdown;
         this.autostart = autostart;
+        this.number = number;
     }
 
     public void addCreatureWaveEntity(CreatureWaveEntity wavemonster)
@@ -29,7 +28,7 @@ public class CreatureWave
     {
         return "Wave{" +
                 "waveid=" + waveid +
-                ", waveprecountdown=" + waveprecountdown +
+                ", waveprecountdown=" + precountdown +
                 ", autostart=" + autostart +
                 '}';
     }
