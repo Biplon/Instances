@@ -1,0 +1,14 @@
+name: Instances
+author: Vestri
+description: Instances
+version: 0.1
+api-version: 1.15
+main: instance.java.Instances
+depend: [PlayertoSql]
+permissions:
+  instances.admin:
+    description: admin
+    default: op
+  instances.player:
+    description: player
+    default: op
