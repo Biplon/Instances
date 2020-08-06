@@ -116,7 +116,7 @@ public class PlayerInstanceConfig
         this.visitsPerHour = cfg.getInt("general.visitsPerHour");
         this.groupLives = cfg.getInt("general.groupLives");
         this.playerOwnInventory =  cfg.getBoolean("general.playerOwnInventory");
-        this.instancesType =  InstancesType.valueOf(cfg.getString("general.instancesTyp"));
+        this.instancesType =  InstancesType.valueOf(cfg.getString("general.instancesType"));
         this.groupSize =  cfg.getInt("general.groupsize");
         this.groupMinSize =  cfg.getInt("general.groupminsize");
         PlayerVisitInstanceManager.getInstance().addInstance(instanceName);
@@ -229,7 +229,7 @@ public class PlayerInstanceConfig
                 }
                 else if (RepetitiveType.valueOf(cfg.getString("repetitive." + count + ".type")) == RepetitiveType.SendMassage)
                 {
-                    repetitives.add(new RepetitiveSendMassage(RepetitiveType.SendMassage,cfg.getInt("repetitive." + count + ".timer"),cfg.getString("repetitive." + count + ".text")));
+                    repetitives.add(new RepetitiveSendMassage(RepetitiveType.SendMassage,cfg.getInt("repetitive." + count + ".timer"),cfg.getString("repetitive." + count + ".text"),cfg.getBoolean("repetitive." + count + ".actionbar")));
                 }
                 count++;
             }

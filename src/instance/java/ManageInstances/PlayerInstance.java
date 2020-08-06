@@ -189,14 +189,14 @@ public class PlayerInstance
                 CreatureSpawnPoint sp = null;
                 for (CreatureSpawnPoint csp : creatureSpawnPoints)
                 {
-                    if (csp.id == ((RepetitiveSpawnCreature)repetitive).getSp())
+                    if (csp.id == ((RepetitiveSpawnCreature) repetitive).getSp())
                     {
                         sp = csp;
                         break;
                     }
                 }
-                data.put("type", ((RepetitiveSpawnCreature)repetitive).getCreature());
-                data.put("number", "" + ((RepetitiveSpawnCreature)repetitive).getAmount());
+                data.put("type", ((RepetitiveSpawnCreature) repetitive).getCreature());
+                data.put("number", "" + ((RepetitiveSpawnCreature) repetitive).getAmount());
                 data.put("x", "" + sp.loc.getBlockX());
                 data.put("y", "" + sp.loc.getBlockY());
                 data.put("z", "" + sp.loc.getBlockZ());
@@ -206,17 +206,18 @@ public class PlayerInstance
                 data.clear();
                 return;
             case SendMassage:
-                for (Player p:myGroup.getGroup())
+                if (((RepetitiveSendMassage) repetitive).isActionbar())
                 {
-                    if (p !=null)
-                    {
-                        p.sendMessage(((RepetitiveSendMassage)repetitive).getText());
-                    }
+                    sendActionbarMessage(((RepetitiveSendMassage) repetitive).getText());
+                }
+                else
+                {
+                    sendMessage(((RepetitiveSendMassage) repetitive).getText());
                 }
                 return;
             case ExecuteCommand:
-                String command = ((RepetitiveExecuteCommand)repetitive).getCommand();
-                for (Player p:myGroup.getGroup())
+                String command = ((RepetitiveExecuteCommand) repetitive).getCommand();
+                for (Player p : myGroup.getGroup())
                 {
                     if (p != null)
                     {
