@@ -168,7 +168,9 @@ public class PlayerInstanceConfig
         }
         if (instancesTyp == InstancesTyp.Waves)
         {
+            isnext = true;
             boolean isnext2;
+            count = 0;
             int count2 = 0;
             while (isnext)
             {
@@ -176,14 +178,14 @@ public class PlayerInstanceConfig
                 count2 = 0;
                 if (cfg.getString("task." + count + ".cooldown") != null)
                 {
-                    if (TaskTyp.valueOf(cfg.getString("task.typ")) == TaskTyp.CreatureWave)
+                    if (TaskTyp.valueOf(cfg.getString("task." + count + ".typ")) == TaskTyp.CreatureWave)
                     {
-                        tasks.add(new TaskCreatureWave(count, Double.parseDouble(Objects.requireNonNull(cfg.getString("task." + count + ".cooldown"))), Boolean.parseBoolean(Objects.requireNonNull(cfg.getString("waves." + count + ".autostart"))),count));
+                        tasks.add(new TaskCreatureWave(count, Double.parseDouble(Objects.requireNonNull(cfg.getString("task." + count + ".cooldown"))), Boolean.parseBoolean(Objects.requireNonNull(cfg.getString("task." + count + ".autostart"))),count));
                         while (isnext2)
                         {
                             if (cfg.getString("task." + count + ".monster." + count2 + ".name") != null)
                             {
-                                ((TaskCreatureWave) tasks.get(count)).addCreatureWaveEntity(new CreatureWaveEntity(cfg.getString("task." + count + ".monster." + count2 + ".name"), cfg.getInt("waves." + count + ".monster." + count2 + ".amount"), cfg.getInt("waves." + count + ".monster." + count2 + ".spawnpointid")));
+                                ((TaskCreatureWave) tasks.get(count)).addCreatureWaveEntity(new CreatureWaveEntity(cfg.getString("task." + count + ".monster." + count2 + ".name"), cfg.getInt("task." + count + ".monster." + count2 + ".amount"), cfg.getInt("task." + count + ".monster." + count2 + ".spawnpointid")));
                                 count2++;
                             }
                             else
@@ -222,7 +224,7 @@ public class PlayerInstanceConfig
             instances = new PlayerInstance[result.size()];
             for (int i = 0; i < result.size(); i++)
             {
-                instances[i] = new PlayerInstance(this,result.get(i));
+                instances[i] = new PlayerInstance(this,i,result.get(i));
             }
             return true;
         }
@@ -305,5 +307,29 @@ public class PlayerInstanceConfig
         {
             pi.clearEnemyList();
         }
+    }
+
+    public boolean idExist(int id)
+    {
+        for (PlayerInstance pi: instances)
+        {
+            if (pi.getId() == id)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public PlayerInstance getInstanceById(int id)
+    {
+        for (PlayerInstance pi: instances)
+        {
+            if (pi.getId() == id)
+            {
+                return pi;
+            }
+        }
+        return null;
     }
 }

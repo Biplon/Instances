@@ -30,7 +30,7 @@ public class GUIManager
 
     public void openJoinInstanceGUI(Player p,String instance)
     {
-        Inventory inv =  Bukkit.createInventory(null, 45, "In: Select "+ instance);
+        Inventory inv =  Bukkit.createInventory(null, 45, "IN: Select "+ instance);
         for (int i = 0; i < 9; i++)
         {
             inv.setItem(i, defaultGuiItem);
@@ -40,9 +40,9 @@ public class GUIManager
         p.openInventory(inv);
     }
 
-    public void openLeaveInstanceGUI(Player p,String instance)
+    public void openLeaveInstanceGUI(Player p)
     {
-        Inventory inv = Bukkit.createInventory(null, 27, "In: Leave instance");
+        Inventory inv = Bukkit.createInventory(null, 27, "IN: Leave instance");
         createDefaultLayoutSmall(inv);
         setLeave(inv);
         p.openInventory(inv);
@@ -50,7 +50,7 @@ public class GUIManager
 
     public void openReadyCheckGUI(Player p)
     {
-        Inventory inv = Bukkit.createInventory(null, 27, "In: Ready check");
+        Inventory inv = Bukkit.createInventory(null, 27, "IN: Ready check");
         createDefaultLayoutSmall(inv);
         setReady(inv);
         p.openInventory(inv);
@@ -77,11 +77,11 @@ public class GUIManager
             {
                 if (!pi.isInuse())
                 {
-                    inv.setItem(count, createGuiItem(Material.GREEN_DYE, pi.getMyConfig().getInstanceName(), pi.getMyGroup().getFullSlots() + "/" +  pi.getMyGroup().getGroupSize() + "Player", "Own equip: " + pi.getMyConfig().getPlayerOwnInventory()));
+                    inv.setItem(count, createGuiItem(Material.GREEN_DYE, pi.getMyConfig().getInstanceName()+":"+pi.getId(), pi.getMyGroup().getFullSlots() + "/" +  pi.getMyGroup().getGroupSize() + "Player", "Own equip: " + pi.getMyConfig().getPlayerOwnInventory()));
                 }
                 else
                 {
-                    inv.setItem(count, createGuiItem(Material.GREEN_DYE, pi.getMyConfig().getInstanceName(), pi.getMyGroup().getFullSlots() + "/" +  pi.getMyGroup().getGroupSize() + "Player", "Own equip: " + pi.getMyConfig().getPlayerOwnInventory()));
+                    inv.setItem(count, createGuiItem(Material.GREEN_DYE, pi.getMyConfig().getInstanceName()+":"+pi.getId(), pi.getMyGroup().getFullSlots() + "/" +  pi.getMyGroup().getGroupSize() + "Player", "Own equip: " + pi.getMyConfig().getPlayerOwnInventory()));
                 }
                 count++;
             }

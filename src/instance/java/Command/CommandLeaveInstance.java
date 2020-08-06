@@ -25,9 +25,9 @@ public class CommandLeaveInstance implements CommandExecutor
             {
                 if (args.length == 0)
                 {
-                    if (!InstancesManager.getInstance().getInstanceOfPlayer(args[0]).isEmpty())
+                    if (InstancesManager.getInstance().getInstanceOfPlayer(player) != null)
                     {
-                        GUIManager.getInstance().openLeaveInstanceGUI(player, InstancesManager.getInstance().getInstanceOfPlayer(player.getName()));
+                        GUIManager.getInstance().openLeaveInstanceGUI(player);
                     }
                     else
                     {
@@ -45,9 +45,9 @@ public class CommandLeaveInstance implements CommandExecutor
         {
             if (args.length == 1)
             {
-                if (!InstancesManager.getInstance().getInstanceOfPlayer(args[0]).isEmpty())
+                if (InstancesManager.getInstance().getInstanceOfPlayer(Bukkit.getPlayer(args[0])) !=null)
                 {
-                    GUIManager.getInstance().openLeaveInstanceGUI(Bukkit.getPlayer(args[0]),InstancesManager.getInstance().getInstanceOfPlayer(args[0]));
+                    GUIManager.getInstance().openLeaveInstanceGUI(Bukkit.getPlayer(args[0]));
                 }
                 else
                 {

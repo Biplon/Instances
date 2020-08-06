@@ -39,7 +39,7 @@ public class InstancesManager
         }
         List<String> result = new ArrayList<>();
         Utility.search(".*\\.yml", folder, result);
-        for (String path: result)
+        for (String path : result)
         {
             instances.add(new PlayerInstanceConfig(path));
         }
@@ -52,7 +52,7 @@ public class InstancesManager
 
     public PlayerInstanceConfig getPlayerInstanceConfig(String name)
     {
-        for (PlayerInstanceConfig pic: instances)
+        for (PlayerInstanceConfig pic : instances)
         {
             if (pic.getInstanceName().equals(name))
             {
@@ -60,11 +60,6 @@ public class InstancesManager
             }
         }
         return null;
-    }
-
-    public String getInstanceOfPlayer(String playerName)
-    {
-        return "";
     }
 
     public void leavePlayer(Player p, boolean disconnect)
@@ -91,16 +86,27 @@ public class InstancesManager
         return null;
     }
 
-    public void CheckEntity()
+    public void setPlayerReady(Player p)
     {
-            for (PlayerInstanceConfig in : instances)
+        PlayerInstance tmp = getInstanceOfPlayer(p);
+        if (tmp != null)
+        {
+            if (tmp.getMyGroup().setPlayerReady(p))
             {
-                    in.clearEnemyList();
+                tmp.prepareStart();
             }
-
+        }
     }
 
-    public boolean canJoin(Player p,String instancename)
+    public void CheckEntity()
+    {
+        for (PlayerInstanceConfig in : instances)
+        {
+            in.clearEnemyList();
+        }
+    }
+
+    public boolean canJoin(Player p, String instanceName)
     {
         for (PlayerInstanceConfig in : instances)
         {
@@ -111,7 +117,7 @@ public class InstancesManager
         }
         for (PlayerInstanceConfig in : instances)
         {
-            if (in.getInstanceName().equals(instancename))
+            if (in.getInstanceName().equals(instanceName))
             {
                 if (in.canJoin(p))
                 {

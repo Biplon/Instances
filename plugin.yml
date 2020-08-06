@@ -4,7 +4,7 @@ description: Instances
 version: 0.1
 api-version: 1.15
 main: instance.java.Instances
-depend: [PlayertoSql]
+depend: [PlayertoSql, WorldGuard, WorldEdit]
 permissions:
   instances.admin:
     description: admin
@@ -19,3 +19,6 @@ commands:
   ileave:
     description: leave instance
     usage: /ileave [playername]
+  iready:
+    description: ready check
+    usage: /iready [playername]

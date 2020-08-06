@@ -6,7 +6,9 @@ import instance.java.Event.InventoryClick;
 import instance.java.Event.OnEntityDeath;
 import instance.java.Event.OnEntityGetDamage;
 import instance.java.Event.OnPlayerQuit;
+import instance.java.GUI.GUIManager;
 import instance.java.ManageInstances.InstancesManager;
+import instance.java.ManageInstances.PlayerVisitInstanceManager;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -25,6 +27,8 @@ public class Instances extends JavaPlugin
     {
         instance = this;
         new InstancesManager();
+        new PlayerVisitInstanceManager();
+        new GUIManager();
         InstancesManager.getInstance().loadInstances();
         regCommands();
         regEvents();
@@ -34,6 +38,7 @@ public class Instances extends JavaPlugin
     {
         this.getCommand("ijoin").setExecutor(new CommandJoinInstance());
         this.getCommand("ileave").setExecutor(new CommandLeaveInstance());
+        this.getCommand("iready").setExecutor(new CommandLeaveInstance());
     }
 
     private void regEvents()

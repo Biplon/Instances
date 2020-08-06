@@ -86,12 +86,15 @@ public class Group
                 if (myinstance.isInuse())
                 {
                     myinstance.teleportPlayerBack(p,loc[i]);
-                    if (!disconnect)
+                    if (!myinstance.getMyConfig().getPlayerOwnInventory())
                     {
-                        PlayerManagement.getInstance().loadPlayerIgnoreDisableSync(p);
+                        if (!disconnect)
+                        {
+                            PlayerManagement.getInstance().loadPlayerIgnoreDisableSync(p);
+                        }
+                        PlayerManagement.getInstance().enablePlayerLoad(p);
+                        PlayerManagement.getInstance().enablePlayerSave(p);
                     }
-                    PlayerManagement.getInstance().enablePlayerLoad(p);
-                    PlayerManagement.getInstance().enablePlayerSave(p);
                 }
                 group[i] = null;
                 ready[i] = false;
@@ -107,7 +110,7 @@ public class Group
                 }
                 if (getFreeGroupSlots() == getGroupSize())
                 {
-                    myinstance.resetHuntingGround();
+                    myinstance.resetInstance();
                 }
                 return;
             }
