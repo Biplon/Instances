@@ -1,10 +1,15 @@
 package instance.java.Struct;
 
-import instance.java.Enum.InstancesTyp;
-import instance.java.Enum.TaskTyp;
+import instance.java.Enum.InstancesType;
+import instance.java.Enum.RepetitiveType;
+import instance.java.Enum.TaskType;
 import instance.java.Instances;
 import instance.java.ManageInstances.PlayerInstance;
 import instance.java.ManageInstances.PlayerVisitInstanceManager;
+import instance.java.Repetitive.Repetitive;
+import instance.java.Repetitive.RepetitiveExecuteCommand;
+import instance.java.Repetitive.RepetitiveSendMassage;
+import instance.java.Repetitive.RepetitiveSpawnCreature;
 import instance.java.Task.Task;
 import instance.java.Task.TaskCreatureWave;
 import instance.java.Task.TaskEvent;
@@ -35,7 +40,7 @@ public class PlayerInstanceConfig
 
     private final int groupMinSize;
 
-    private final InstancesTyp instancesTyp;
+    private final InstancesType instancesType;
 
     private final ArrayList<String> instancesStartCommands = new ArrayList();
 
@@ -44,6 +49,8 @@ public class PlayerInstanceConfig
     private final ArrayList<String> instancesWinCommands = new ArrayList();
 
     private final ArrayList<Task> tasks = new ArrayList();
+
+    private final ArrayList<Repetitive> repetitives = new ArrayList();
 
     public String getInstanceName()
     {
@@ -60,9 +67,9 @@ public class PlayerInstanceConfig
         return playerOwnInventory;
     }
 
-    public InstancesTyp getInstancesTyp()
+    public InstancesType getInstancesType()
     {
-        return  instancesTyp;
+        return instancesType;
     }
 
     public PlayerInstance[] getInstances()
@@ -109,7 +116,7 @@ public class PlayerInstanceConfig
         this.visitsPerHour = cfg.getInt("general.visitsPerHour");
         this.groupLives = cfg.getInt("general.groupLives");
         this.playerOwnInventory =  cfg.getBoolean("general.playerOwnInventory");
-        this.instancesTyp =  InstancesTyp.valueOf(cfg.getString("general.instancesTyp"));
+        this.instancesType =  InstancesType.valueOf(cfg.getString("general.instancesTyp"));
         this.groupSize =  cfg.getInt("general.groupsize");
         this.groupMinSize =  cfg.getInt("general.groupminsize");
         PlayerVisitInstanceManager.getInstance().addInstance(instanceName);
@@ -166,19 +173,19 @@ public class PlayerInstanceConfig
             Bukkit.getLogger().info(instanceName+": can not load!");
             return;
         }
-        if (instancesTyp == InstancesTyp.Waves)
+        boolean isnext2;
+        int count2 = 0;
+        if (instancesType == InstancesType.Waves)
         {
             isnext = true;
-            boolean isnext2;
             count = 0;
-            int count2 = 0;
             while (isnext)
             {
                 isnext2 = true;
                 count2 = 0;
                 if (cfg.getString("task." + count + ".cooldown") != null)
                 {
-                    if (TaskTyp.valueOf(cfg.getString("task." + count + ".typ")) == TaskTyp.CreatureWave)
+                    if (TaskType.valueOf(cfg.getString("task." + count + ".type")) == TaskType.CreatureWave)
                     {
                         tasks.add(new TaskCreatureWave(count, Double.parseDouble(Objects.requireNonNull(cfg.getString("task." + count + ".cooldown"))), Boolean.parseBoolean(Objects.requireNonNull(cfg.getString("task." + count + ".autostart"))),count));
                         while (isnext2)
@@ -194,7 +201,7 @@ public class PlayerInstanceConfig
                             }
                         }
                     }
-                    else if (TaskTyp.valueOf(cfg.getString("task.typ")) == TaskTyp.Event)
+                    else if (TaskType.valueOf(cfg.getString("task." + count + ".type")) == TaskType.Event)
                     {
                         tasks.add(new TaskEvent(count));
                     }
@@ -205,7 +212,50 @@ public class PlayerInstanceConfig
                     isnext = false;
                 }
             }
+        }
+        isnext = true;
+        count = 0;
+        while (isnext)
+        {
+            if (cfg.getString("repetitive." + count + ".type") != null)
+            {
+                if (RepetitiveType.valueOf(cfg.getString("repetitive." + count + ".type")) == RepetitiveType.SpawnCreature)
+                {
+                    repetitives.add(new RepetitiveSpawnCreature(RepetitiveType.SpawnCreature,cfg.getInt("repetitive." + count + ".timer"),cfg.getString("repetitive." + count + ".monster"),cfg.getInt("repetitive." + count + ".amount"),cfg.getInt("repetitive." + count + ".spawnpointid")));
+                }
+                else if (RepetitiveType.valueOf(cfg.getString("repetitive." + count + ".type")) == RepetitiveType.ExecuteCommand)
+                {
+                    repetitives.add(new RepetitiveExecuteCommand(RepetitiveType.ExecuteCommand,cfg.getInt("repetitive." + count + ".timer"),cfg.getString("repetitive." + count + ".command")));
+                }
+                else if (RepetitiveType.valueOf(cfg.getString("repetitive." + count + ".type")) == RepetitiveType.SendMassage)
+                {
+                    repetitives.add(new RepetitiveSendMassage(RepetitiveType.SendMassage,cfg.getInt("repetitive." + count + ".timer"),cfg.getString("repetitive." + count + ".text")));
+                }
+                count++;
+            }
+            else
+            {
+                isnext = false;
+            }
+        }
+        isnext = true;
+        count = 0;
+        while (isnext)
+        {
 
+            if (cfg.getString("trigger." + count + ".type") != null)
+            {
+                count++;
+            }
+            else
+            {
+                isnext = false;
+            }
+        }
+
+        for (PlayerInstance pi:instances)
+        {
+            pi.repetitives = repetitives;
         }
     }
 

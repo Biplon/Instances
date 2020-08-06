@@ -6,9 +6,13 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import instance.java.Config.LanguageManager;
-import instance.java.Enum.InstancesTyp;
+import instance.java.Enum.InstancesType;
 import instance.java.Group.Group;
 import instance.java.Instances;
+import instance.java.Repetitive.Repetitive;
+import instance.java.Repetitive.RepetitiveExecuteCommand;
+import instance.java.Repetitive.RepetitiveSendMassage;
+import instance.java.Repetitive.RepetitiveSpawnCreature;
 import instance.java.Struct.CreatureSpawnPoint;
 import instance.java.Struct.CreatureWaveEntity;
 import instance.java.Struct.PlayerInstanceConfig;
@@ -49,6 +53,10 @@ public class PlayerInstance
     private final ArrayList<PlayerSpawnPoint> playerSpawnPoints = new ArrayList();
 
     public ArrayList<Entity> enemylist = new ArrayList();
+
+    public ArrayList<Repetitive> repetitives = new ArrayList();
+
+    private int[] repeitivesBukkitTask;
 
     private boolean inUse = false;
 
@@ -96,53 +104,42 @@ public class PlayerInstance
         RegionManager regions = container.get(BukkitAdapter.adapt(myWorld));
         assert regions != null;
         myRegion = regions.getRegion(Objects.requireNonNull(cfg.getString("general.regionname")));
-        if (myConfig.getInstancesTyp() == InstancesTyp.Waves)
+        boolean isnext = true;
+        int count = 0;
+        String[] coords;
+        while (isnext)
         {
-            boolean isnext = true;
-            int count = 0;
-            String[] coords;
-            while (isnext)
+            if (cfg.getString("creatureSpawnPoints." + count + ".coords") != null)
             {
-                if (cfg.getString("creatureSpawnPoints." + count + ".coords") != null)
-                {
-                    coords = cfg.getString("creatureSpawnPoints." + count + ".coords").split(",");
-                    creatureSpawnPoints.add(new CreatureSpawnPoint(count, myWorld, Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2])));
-                    count++;
-                }
-                else
-                {
-                    isnext = false;
-                }
+                coords = cfg.getString("creatureSpawnPoints." + count + ".coords").split(",");
+                creatureSpawnPoints.add(new CreatureSpawnPoint(count, myWorld, Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2])));
+                count++;
+            }
+            else
+            {
+                isnext = false;
+            }
+        }
+
+        isnext = true;
+        count = 0;
+        while (isnext)
+        {
+            if (cfg.getString("playerSpawnpoints." + count + ".coords") != null)
+            {
+                coords = cfg.getString("playerSpawnpoints." + count + ".coords").split(",");
+
+                playerSpawnPoints.add(new PlayerSpawnPoint(count, myWorld, Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2])));
+                count++;
+            }
+            else
+            {
+                isnext = false;
             }
 
-            isnext = true;
-            count = 0;
-            while (isnext)
-            {
-                if (cfg.getString("playerSpawnpoints." + count + ".coords") != null)
-                {
-                    coords = cfg.getString("playerSpawnpoints." + count + ".coords").split(",");
-
-                    playerSpawnPoints.add(new PlayerSpawnPoint(count, myWorld, Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2])));
-                    count++;
-                }
-                else
-                {
-                    isnext = false;
-                }
-            }
             activePlayerSpawn = playerSpawnPoints.get(0);
         }
-        else if (myConfig.getInstancesTyp() == InstancesTyp.ReachObject)
-        {
-
-        }
-        else if (myConfig.getInstancesTyp() == InstancesTyp.KillSpecificCreature)
-        {
-
-        }
     }
-
 
     public void prepareStart()
     {
@@ -158,6 +155,74 @@ public class PlayerInstance
             teleportPlayerToInstance();
 
             Bukkit.getScheduler().runTaskLaterAsynchronously(Instances.getInstance(), this::startInstance, 2);
+            Bukkit.getScheduler().runTaskLaterAsynchronously(Instances.getInstance(), this::startRepetitives, 2);
+        }
+    }
+
+    private void startRepetitives()
+    {
+        if (repetitives.size() > 0)
+        {
+            repeitivesBukkitTask = new int[repetitives.size()];
+            for (int i = 0; i < repeitivesBukkitTask.length; i++)
+            {
+                int finalI = i;
+                repeitivesBukkitTask[i] = Bukkit.getScheduler().scheduleSyncRepeatingTask(Instances.getInstance(), new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        executeRepetitive(finalI);
+                    }
+                }, (long) repetitives.get(i).getTimer() * 20, (long) repetitives.get(i).getTimer() * 20);
+            }
+        }
+    }
+
+    private void executeRepetitive(int repetitiveid)
+    {
+        Repetitive repetitive = repetitives.get(repetitiveid);
+        switch (repetitive.getType())
+        {
+            case SpawnCreature:
+                Map<String, String> data = new HashMap<String, String>();
+                CreatureSpawnPoint sp = null;
+                for (CreatureSpawnPoint csp : creatureSpawnPoints)
+                {
+                    if (csp.id == ((RepetitiveSpawnCreature)repetitive).getSp())
+                    {
+                        sp = csp;
+                        break;
+                    }
+                }
+                data.put("type", ((RepetitiveSpawnCreature)repetitive).getCreature());
+                data.put("number", "" + ((RepetitiveSpawnCreature)repetitive).getAmount());
+                data.put("x", "" + sp.loc.getBlockX());
+                data.put("y", "" + sp.loc.getBlockY());
+                data.put("z", "" + sp.loc.getBlockZ());
+                data.put("world", myWorld.getName());
+                String formattedString = StrSubstitutor.replace("mo lspawn ${type} ${number} ${x} ${y} ${z} ${world}", data);
+                Bukkit.getScheduler().callSyncMethod(Instances.getInstance(), () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), formattedString));
+                data.clear();
+                return;
+            case SendMassage:
+                for (Player p:myGroup.getGroup())
+                {
+                    if (p !=null)
+                    {
+                        p.sendMessage(((RepetitiveSendMassage)repetitive).getText());
+                    }
+                }
+                return;
+            case ExecuteCommand:
+                String command = ((RepetitiveExecuteCommand)repetitive).getCommand();
+                for (Player p:myGroup.getGroup())
+                {
+                    if (p != null)
+                    {
+                        Bukkit.getScheduler().callSyncMethod(Instances.getInstance(), () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", p.getName())));
+                    }
+                }
         }
     }
 
@@ -174,7 +239,7 @@ public class PlayerInstance
                 Bukkit.getScheduler().callSyncMethod(Instances.getInstance(), () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.replace("%player%", p.getName())));
             }
         }
-        if (myConfig.getInstancesTyp() == InstancesTyp.Waves)
+        if (myConfig.getInstancesType() == InstancesType.Waves)
         {
             Bukkit.getScheduler().runTaskLaterAsynchronously(Instances.getInstance(), this::initTaskStart, 200);
         }
@@ -188,7 +253,7 @@ public class PlayerInstance
             {
                 if (((TaskCreatureWave) myConfig.getTasks().get(taskCount)).autostart)
                 {
-                    sendActionbarMessage(LanguageManager.getInstance().waveStartTimeText.replace("%time%",((TaskCreatureWave) myConfig.getTasks().get(taskCount)).preCountdown+""));
+                    sendActionbarMessage(LanguageManager.getInstance().waveStartTimeText.replace("%time%", ((TaskCreatureWave) myConfig.getTasks().get(taskCount)).preCountdown + ""));
                     Bukkit.getScheduler().runTaskLaterAsynchronously(Instances.getInstance(), this::startTaskCreatureWave, (long) (((TaskCreatureWave) myConfig.getTasks().get(taskCount)).preCountdown * 20));
                 }
             }
@@ -253,6 +318,10 @@ public class PlayerInstance
         activePlayerSpawn = playerSpawnPoints.get(0);
         killEnemyList();
         myGroup.clearGroup();
+        for (int i = 0; i < repeitivesBukkitTask.length; i++)
+        {
+            Bukkit.getScheduler().cancelTask(repeitivesBukkitTask[i]);
+        }
     }
 
     private boolean getEnemys()

@@ -1,6 +1,6 @@
 package instance.java.Enum;
 
-public enum  InstancesTyp
+public enum InstancesType
 {
     Waves,
     ReachObject,
