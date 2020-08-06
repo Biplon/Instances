@@ -31,11 +31,11 @@ public class PlayerInstanceConfig
 
     private PlayerInstance[] instances = null;
 
-    private int groupSize;
+    private final int groupSize;
 
-    private int groupMinSize;
+    private final int groupMinSize;
 
-    private InstancesTyp instancesTyp;
+    private final InstancesTyp instancesTyp;
 
     private final ArrayList<String> instancesStartCommands = new ArrayList();
 
@@ -237,14 +237,7 @@ public class PlayerInstanceConfig
 
     public boolean canJoin(Player p)
     {
-        if (PlayerVisitInstanceManager.getInstance().getVisits(p, instanceName) < visitsPerHour || visitsPerHour == 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return PlayerVisitInstanceManager.getInstance().getVisits(p, instanceName) < visitsPerHour || visitsPerHour == 0;
     }
 
     public boolean isPlayerInInstance(Player p)

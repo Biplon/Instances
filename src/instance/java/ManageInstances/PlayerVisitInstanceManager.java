@@ -28,9 +28,9 @@ public class PlayerVisitInstanceManager
 
     public void addPlayer(UUID pid, String hg)
     {
-        for (InstanceVisit iv :visits)
+        for (InstanceVisit iv : visits)
         {
-            if (iv.instancename.equals(hg))
+            if (iv.instanceName.equals(hg))
             {
                 iv.addVisitor(pid);
                 return;
@@ -40,9 +40,9 @@ public class PlayerVisitInstanceManager
 
     public int getVisits(Player p, String in)
     {
-        for (InstanceVisit iv :visits)
+        for (InstanceVisit iv : visits)
         {
-            if (iv.instancename.equals(in))
+            if (iv.instanceName.equals(in))
             {
                 return iv.getVisits(p);
             }
@@ -62,7 +62,7 @@ public class PlayerVisitInstanceManager
 
     private void cleanVisits()
     {
-        for (InstanceVisit iv :visits)
+        for (InstanceVisit iv : visits)
         {
             iv.clearVisitors();
         }

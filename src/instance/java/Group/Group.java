@@ -1,5 +1,6 @@
 package instance.java.Group;
 
+import instance.java.Config.LanguageManager;
 import instance.java.GUI.GUIManager;
 import instance.java.ManageInstances.PlayerInstance;
 import org.bukkit.Location;
@@ -10,15 +11,15 @@ import java.util.Arrays;
 
 public class Group
 {
-    private final PlayerInstance myinstance;
+    private final PlayerInstance myInstance;
 
-    private final int minsize;
+    private final int minSize;
 
-    private Player[] group;
+    private final Player[] group;
 
     public boolean[] ready;
 
-    private Location[] loc;
+    private final Location[] loc;
 
     public Player[] getGroup()
     {
@@ -30,10 +31,10 @@ public class Group
         return loc;
     }
 
-    public Group(PlayerInstance instance,int minsize,int groupSize)
+    public Group(PlayerInstance instance, int minSize, int groupSize)
     {
-        this.myinstance = instance;
-        this.minsize = minsize;
+        this.myInstance = instance;
+        this.minSize = minSize;
         group = new Player[groupSize];
         ready = new boolean[groupSize];
         loc = new Location[groupSize];
@@ -51,13 +52,13 @@ public class Group
                     group[i] = p;
                     if (group.length > 1)
                     {
-                        myinstance.sendMessage(p.getDisplayName() +" joint the group");
-                        myinstance.sendMessage( "Group: " + getFullSlots()+ "/" + getGroupSize());
-                        myinstance.sendMessage( "You Need: " + getFreeGroupSlots()+ " Player to start");
+                        myInstance.sendMessage(p.getDisplayName() +" "+ LanguageManager.getInstance().joinedGroupText);
+                        myInstance.sendMessage( LanguageManager.getInstance().groupText +" " + getFullSlots()+ "/" + getGroupSize());
+                        myInstance.sendMessage(LanguageManager.getInstance().playerNeedText.replace("%Slots%",getFreeGroupSlots()+""));
                     }
                     if (groupMinSizeReached())
                     {
-                        myinstance.sendMessageWithClickEvent("You have the min Group size. Do you want to start ?","/hgstartreadycheck",true);
+                        myInstance.sendMessageWithClickEvent(LanguageManager.getInstance().preStartText,"/istartreadycheck",true);
                     }
                     if (isFull())
                     {
@@ -69,7 +70,7 @@ public class Group
         }
     }
 
-    public void savePlayerloc()
+    public void savePlayerLoc()
     {
         for (int i = 0; i < group.length; i++)
         {
@@ -83,10 +84,10 @@ public class Group
         {
             if (group[i].getUniqueId().equals(p.getUniqueId()))
             {
-                if (myinstance.isInuse())
+                if (myInstance.isInUse())
                 {
-                    myinstance.teleportPlayerBack(p,loc[i]);
-                    if (!myinstance.getMyConfig().getPlayerOwnInventory())
+                    myInstance.teleportPlayerBack(p,loc[i]);
+                    if (!myInstance.getMyConfig().getPlayerOwnInventory())
                     {
                         if (!disconnect)
                         {
@@ -101,16 +102,16 @@ public class Group
                 loc[i] = null;
                 if (group.length > 1)
                 {
-                    myinstance.sendMessage(p.getDisplayName() + "Leave the hunting group");
-                    if (!myinstance.isInuse())
+                    myInstance.sendMessage(p.getDisplayName() + " "+LanguageManager.getInstance().playerLeaveInstanceText);
+                    if (!myInstance.isInUse())
                     {
-                        myinstance.sendMessage( "Group: " + getFullSlots()+ "/" + getGroupSize());
-                        myinstance.sendMessage( "You Need: " + getFreeGroupSlots()+ " Player to start");
+                        myInstance.sendMessage( LanguageManager.getInstance().groupText +" " + getFullSlots()+ "/" + getGroupSize());
+                        myInstance.sendMessage(  LanguageManager.getInstance().playerNeedText.replace("%Slots%",getFreeGroupSlots()+""));
                     }
                 }
                 if (getFreeGroupSlots() == getGroupSize())
                 {
-                    myinstance.resetInstance();
+                    myInstance.resetInstance();
                 }
                 return;
             }
@@ -182,14 +183,7 @@ public class Group
 
     public boolean groupMinSizeReached()
     {
-        if (minsize < getGroupSize() && getFullSlots() >= minsize)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return minSize < getGroupSize() && getFullSlots() >= minSize;
     }
 
     public void clearGroup()

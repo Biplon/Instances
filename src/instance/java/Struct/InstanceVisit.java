@@ -8,13 +8,13 @@ import java.util.UUID;
 
 public class InstanceVisit
 {
-    public final String instancename;
+    public final String instanceName;
 
     private final List<UUID> visitors = new ArrayList<>();
 
-    public InstanceVisit(String instancename)
+    public InstanceVisit(String instanceName)
     {
-        this.instancename = instancename;
+        this.instanceName = instanceName;
     }
 
     public void addVisitor(UUID pid)

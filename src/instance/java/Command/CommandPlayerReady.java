@@ -1,7 +1,6 @@
 package instance.java.Command;
 
 import instance.java.GUI.GUIManager;
-import instance.java.ManageInstances.InstancesManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

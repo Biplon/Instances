@@ -2,6 +2,9 @@ package instance.java;
 
 import instance.java.Command.CommandJoinInstance;
 import instance.java.Command.CommandLeaveInstance;
+import instance.java.Command.CommandStartPreReadyCheck;
+import instance.java.Config.ConfigManager;
+import instance.java.Config.LanguageManager;
 import instance.java.Event.InventoryClick;
 import instance.java.Event.OnEntityDeath;
 import instance.java.Event.OnEntityGetDamage;
@@ -29,6 +32,10 @@ public class Instances extends JavaPlugin
         new InstancesManager();
         new PlayerVisitInstanceManager();
         new GUIManager();
+        new ConfigManager();
+        ConfigManager.getInstance().loadConfig();
+        new LanguageManager();
+        LanguageManager.getInstance().loadLang();
         InstancesManager.getInstance().loadInstances();
         regCommands();
         regEvents();
@@ -39,6 +46,7 @@ public class Instances extends JavaPlugin
         this.getCommand("ijoin").setExecutor(new CommandJoinInstance());
         this.getCommand("ileave").setExecutor(new CommandLeaveInstance());
         this.getCommand("iready").setExecutor(new CommandLeaveInstance());
+        this.getCommand("istartreadycheck").setExecutor(new CommandStartPreReadyCheck());
     }
 
     private void regEvents()

@@ -2,9 +2,9 @@ package instance.java.Task;
 
 public abstract class Task
 {
-   public int number;
+    public int number;
 
-   public double precountdown;
+    public double preCountdown;
 
-   public boolean autostart;
+    public boolean autostart;
 }

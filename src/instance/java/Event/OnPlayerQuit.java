@@ -10,6 +10,6 @@ public class OnPlayerQuit implements Listener
     @EventHandler
     public void onDisconnect(final PlayerQuitEvent event)
     {
-        InstancesManager.getInstance().leavePlayer(event.getPlayer(),true);
+        InstancesManager.getInstance().leavePlayer(event.getPlayer(), true);
     }
 }

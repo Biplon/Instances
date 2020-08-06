@@ -1,7 +1,7 @@
 package instance.java.Command;
 
+import instance.java.Config.LanguageManager;
 import instance.java.GUI.GUIManager;
-import instance.java.Instances;
 import instance.java.ManageInstances.InstancesManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -31,7 +31,7 @@ public class CommandLeaveInstance implements CommandExecutor
                     }
                     else
                     {
-                        commandSender.sendMessage("You are in no instance");
+                        commandSender.sendMessage(LanguageManager.getInstance().notInInstanceText);
                     }
                     return true;
                 }
@@ -45,13 +45,13 @@ public class CommandLeaveInstance implements CommandExecutor
         {
             if (args.length == 1)
             {
-                if (InstancesManager.getInstance().getInstanceOfPlayer(Bukkit.getPlayer(args[0])) !=null)
+                if (InstancesManager.getInstance().getInstanceOfPlayer(Bukkit.getPlayer(args[0])) != null)
                 {
                     GUIManager.getInstance().openLeaveInstanceGUI(Bukkit.getPlayer(args[0]));
                 }
                 else
                 {
-                    commandSender.sendMessage("Player not in a instance");
+                    commandSender.sendMessage(LanguageManager.getInstance().notInInstanceConsoleText);
                 }
                 return true;
             }

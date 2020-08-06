@@ -22,3 +22,6 @@ commands:
   iready:
     description: ready check
     usage: /iready [playername]
+  istartreadycheck:
+    description: start ready check
+    usage: /istartreadycheck

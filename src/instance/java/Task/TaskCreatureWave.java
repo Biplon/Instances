@@ -6,29 +6,29 @@ import java.util.ArrayList;
 
 public class TaskCreatureWave extends Task
 {
-    public final int waveid;
+    public final int waveId;
 
     public final ArrayList<CreatureWaveEntity> waveMonsters = new ArrayList();
 
-    public TaskCreatureWave(int waveid, double waveprecountdown, boolean autostart,int number)
+    public TaskCreatureWave(int waveId, double wavePreCountdown, boolean autostart, int number)
     {
-        this.waveid = waveid;
-        this.precountdown = waveprecountdown;
+        this.waveId = waveId;
+        this.preCountdown = wavePreCountdown;
         this.autostart = autostart;
         this.number = number;
     }
 
-    public void addCreatureWaveEntity(CreatureWaveEntity wavemonster)
+    public void addCreatureWaveEntity(CreatureWaveEntity waveMonster)
     {
-        waveMonsters.add(wavemonster);
+        waveMonsters.add(waveMonster);
     }
 
     @Override
     public String toString()
     {
         return "Wave{" +
-                "waveid=" + waveid +
-                ", waveprecountdown=" + precountdown +
+                "waveId=" + waveId +
+                ", wavePreCountdown=" + preCountdown +
                 ", autostart=" + autostart +
                 '}';
     }

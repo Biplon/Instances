@@ -5,13 +5,14 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
+import instance.java.Config.LanguageManager;
 import instance.java.Enum.InstancesTyp;
 import instance.java.Group.Group;
 import instance.java.Instances;
 import instance.java.Struct.CreatureSpawnPoint;
 import instance.java.Struct.CreatureWaveEntity;
 import instance.java.Struct.PlayerInstanceConfig;
-import instance.java.Struct.PlayerSpawnpoint;
+import instance.java.Struct.PlayerSpawnPoint;
 import instance.java.Task.TaskCreatureWave;
 import instance.java.Task.TaskEvent;
 import net.md_5.bungee.api.ChatMessageType;
@@ -41,30 +42,25 @@ public class PlayerInstance
 
     private ProtectedRegion myRegion;
 
-    private boolean istaskactive = false;
+    private boolean isTaskActive = false;
 
     private final ArrayList<CreatureSpawnPoint> creatureSpawnPoints = new ArrayList();
 
-    private final ArrayList<PlayerSpawnpoint> playerSpawnpoints = new ArrayList();
+    private final ArrayList<PlayerSpawnPoint> playerSpawnPoints = new ArrayList();
 
     public ArrayList<Entity> enemylist = new ArrayList();
 
-    private boolean inuse = false;
+    private boolean inUse = false;
 
-    private int grouplivescurrent;
+    private int groupLivesCurrent;
 
-    private PlayerSpawnpoint activePlayerSpawn;
+    private PlayerSpawnPoint activePlayerSpawn;
 
-    private int taskcount = 0;
+    private int taskCount = 0;
 
-    public boolean isInuse()
+    public boolean isInUse()
     {
-        return inuse;
-    }
-
-    public void setInuse()
-    {
-        inuse = true;
+        return inUse;
     }
 
     public Group getMyGroup()
@@ -72,7 +68,7 @@ public class PlayerInstance
         return myGroup;
     }
 
-    public PlayerSpawnpoint getActivePlayerSpawn()
+    public PlayerSpawnPoint getActivePlayerSpawn()
     {
         return activePlayerSpawn;
     }
@@ -87,14 +83,14 @@ public class PlayerInstance
         return id;
     }
 
-    public PlayerInstance(PlayerInstanceConfig config,int id, String path)
+    public PlayerInstance(PlayerInstanceConfig config, int id, String path)
     {
         File f = new File(path);
         FileConfiguration cfg = YamlConfiguration.loadConfiguration(f);
-        this.id= id;
+        this.id = id;
         myConfig = config;
         myWorld = Bukkit.getWorld(Objects.requireNonNull(cfg.getString("general.worldname")));
-        myGroup = new Group(this,config.getGroupMinSize(),config.getGroupSize());
+        myGroup = new Group(this, config.getGroupMinSize(), config.getGroupSize());
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         assert myWorld != null;
         RegionManager regions = container.get(BukkitAdapter.adapt(myWorld));
@@ -127,7 +123,7 @@ public class PlayerInstance
                 {
                     coords = cfg.getString("playerSpawnpoints." + count + ".coords").split(",");
 
-                    playerSpawnpoints.add(new PlayerSpawnpoint(count, myWorld, Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2])));
+                    playerSpawnPoints.add(new PlayerSpawnPoint(count, myWorld, Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2])));
                     count++;
                 }
                 else
@@ -135,7 +131,7 @@ public class PlayerInstance
                     isnext = false;
                 }
             }
-            activePlayerSpawn = playerSpawnpoints.get(0);
+            activePlayerSpawn = playerSpawnPoints.get(0);
         }
         else if (myConfig.getInstancesTyp() == InstancesTyp.ReachObject)
         {
@@ -148,23 +144,21 @@ public class PlayerInstance
     }
 
 
-    public boolean prepareStart()
+    public void prepareStart()
     {
         if (myGroup.isFull())
         {
-            inuse = true;
+            inUse = true;
 
             if (!myConfig.getPlayerOwnInventory())
             {
                 myGroup.saveInventory();
             }
-            myGroup.savePlayerloc();
+            myGroup.savePlayerLoc();
             teleportPlayerToInstance();
 
             Bukkit.getScheduler().runTaskLaterAsynchronously(Instances.getInstance(), this::startInstance, 2);
-            return true;
         }
-        return false;
     }
 
     public void startInstance()
@@ -182,27 +176,27 @@ public class PlayerInstance
         }
         if (myConfig.getInstancesTyp() == InstancesTyp.Waves)
         {
-           Bukkit.getScheduler().runTaskLaterAsynchronously(Instances.getInstance(), this::initTaskStart, 200);
+            Bukkit.getScheduler().runTaskLaterAsynchronously(Instances.getInstance(), this::initTaskStart, 200);
         }
     }
 
     public void initTaskStart()
     {
-        if (inuse)
+        if (inUse)
         {
-            if (myConfig.getTasks().get(taskcount) instanceof TaskCreatureWave)
+            if (myConfig.getTasks().get(taskCount) instanceof TaskCreatureWave)
             {
-                if (((TaskCreatureWave)myConfig.getTasks().get(taskcount)).autostart)
+                if (((TaskCreatureWave) myConfig.getTasks().get(taskCount)).autostart)
                 {
-                    sendActionbarMessage("Wave start in " + ((TaskCreatureWave)myConfig.getTasks().get(taskcount)).precountdown + " sec");
-                    Bukkit.getScheduler().runTaskLaterAsynchronously(Instances.getInstance(), this::startTaskCreatureWave, (long) (((TaskCreatureWave)myConfig.getTasks().get(taskcount)).precountdown * 20));
+                    sendActionbarMessage(LanguageManager.getInstance().waveStartTimeText.replace("%time%",((TaskCreatureWave) myConfig.getTasks().get(taskCount)).preCountdown+""));
+                    Bukkit.getScheduler().runTaskLaterAsynchronously(Instances.getInstance(), this::startTaskCreatureWave, (long) (((TaskCreatureWave) myConfig.getTasks().get(taskCount)).preCountdown * 20));
                 }
             }
-            else if (myConfig.getTasks().get(taskcount) instanceof TaskEvent)
+            else if (myConfig.getTasks().get(taskCount) instanceof TaskEvent)
             {
-                if (((TaskEvent)myConfig.getTasks().get(taskcount)).autostart)
+                if (((TaskEvent) myConfig.getTasks().get(taskCount)).autostart)
                 {
-                    Bukkit.getScheduler().runTaskLaterAsynchronously(Instances.getInstance(), this::startTaskEvent, (long) (((TaskEvent)myConfig.getTasks().get(taskcount)).precountdown * 20));
+                    Bukkit.getScheduler().runTaskLaterAsynchronously(Instances.getInstance(), this::startTaskEvent, (long) (((TaskEvent) myConfig.getTasks().get(taskCount)).preCountdown * 20));
                 }
             }
         }
@@ -216,15 +210,15 @@ public class PlayerInstance
 
     public void startTaskCreatureWave()
     {
-        if (!istaskactive && inuse)
+        if (!isTaskActive && inUse)
         {
-            if (myConfig.getTasks().get(taskcount) instanceof TaskCreatureWave)
+            if (myConfig.getTasks().get(taskCount) instanceof TaskCreatureWave)
             {
                 Map<String, String> data = new HashMap<String, String>();
                 CreatureSpawnPoint sp = null;
-                for (CreatureWaveEntity wm :((TaskCreatureWave)myConfig.getTasks().get(taskcount)).waveMonsters)
+                for (CreatureWaveEntity wm : ((TaskCreatureWave) myConfig.getTasks().get(taskCount)).waveMonsters)
                 {
-                    for (CreatureSpawnPoint csp: creatureSpawnPoints)
+                    for (CreatureSpawnPoint csp : creatureSpawnPoints)
                     {
                         if (csp.id == wm.creaturespawnpointid)
                         {
@@ -242,21 +236,21 @@ public class PlayerInstance
                     Bukkit.getScheduler().callSyncMethod(Instances.getInstance(), () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), formattedString));
                     data.clear();
                 }
-                taskcount++;
+                taskCount++;
                 Bukkit.getScheduler().callSyncMethod(Instances.getInstance(), this::getEnemys);
-                istaskactive = true;
-                sendActionbarMessage("Wave started");
+                isTaskActive = true;
+                sendActionbarMessage(LanguageManager.getInstance().waveStartedText);
             }
         }
     }
 
     public void resetInstance()
     {
-        inuse = false;
-        taskcount = 0;
-        istaskactive = false;
-        grouplivescurrent = myConfig.getGroupLives();
-        activePlayerSpawn = playerSpawnpoints.get(0);
+        inUse = false;
+        taskCount = 0;
+        isTaskActive = false;
+        groupLivesCurrent = myConfig.getGroupLives();
+        activePlayerSpawn = playerSpawnPoints.get(0);
         killEnemyList();
         myGroup.clearGroup();
     }
@@ -293,14 +287,13 @@ public class PlayerInstance
 
     public void checkIsWaveClear()
     {
-        if (enemylist.size() == 0 && istaskactive)
+        if (enemylist.size() == 0 && isTaskActive)
         {
-            istaskactive = false;
-            sendActionbarMessage("wave clear");
-            if (taskcount >= myConfig.getTasks().size())
+            isTaskActive = false;
+            sendActionbarMessage(LanguageManager.getInstance().waveClearedText);
+            if (taskCount >= myConfig.getTasks().size())
             {
-                sendActionbarMessage("Win");
-                endinstance(true);
+                endInstance(true);
             }
             else
             {
@@ -311,7 +304,7 @@ public class PlayerInstance
 
     private void killEnemyList()
     {
-        for (Entity m: enemylist)
+        for (Entity m : enemylist)
         {
             m.remove();
         }
@@ -322,15 +315,15 @@ public class PlayerInstance
     {
         if (myConfig.getGroupLives() > 0)
         {
-            grouplivescurrent--;
-            if (grouplivescurrent <= 0)
+            groupLivesCurrent--;
+            if (groupLivesCurrent <= 0)
             {
-                endinstance(false);
+                endInstance(false);
             }
         }
     }
 
-    public void endinstance(boolean win)
+    public void endInstance(boolean win)
     {
         teleportPlayersBack();
         if (!myConfig.getPlayerOwnInventory())
@@ -357,11 +350,11 @@ public class PlayerInstance
         }
         if (win)
         {
-            sendMessage("win");
+            sendMessage(LanguageManager.getInstance().winText);
         }
         else
         {
-            sendMessage("lose");
+            sendMessage(LanguageManager.getInstance().loseText);
         }
         resetInstance();
     }
@@ -372,7 +365,7 @@ public class PlayerInstance
         {
             if (p != null)
             {
-                p.teleport(playerSpawnpoints.get(0).loc);
+                p.teleport(playerSpawnPoints.get(0).loc);
             }
         }
     }

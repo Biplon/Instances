@@ -1,5 +1,6 @@
 package instance.java.Event;
 
+import instance.java.Config.LanguageManager;
 import instance.java.ManageInstances.InstancesManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -33,6 +34,7 @@ public class InventoryClick implements Listener
         String[] values;
         String name = "";
         int id = 0;
+
         if (Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName().contains(":"))
         {
             values = Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName().split(":");
@@ -48,7 +50,7 @@ public class InventoryClick implements Listener
                 }
                 else
                 {
-                    p.sendMessage("Group full! For: " + name);
+                    p.sendMessage(LanguageManager.getInstance().groupFullText + " " + name);
                     e.setCancelled(true);
                 }
             }
@@ -58,28 +60,26 @@ public class InventoryClick implements Listener
             name = Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName();
         }
 
-
-        if (name.equalsIgnoreCase("ready"))
+        if (name.equalsIgnoreCase(LanguageManager.getInstance().readyText))
         {
             InstancesManager.getInstance().setPlayerReady(p);
             p.closeInventory();
         }
-        else if (name.equalsIgnoreCase("not ready"))
+        else if (name.equalsIgnoreCase(LanguageManager.getInstance().notReadyText))
         {
-            p.sendMessage("If you ready type: /iready");
+            p.sendMessage(LanguageManager.getInstance().ifReadyText + " /iready");
             p.closeInventory();
         }
-        else if (name.equalsIgnoreCase("yes leave"))
+        else if (name.equalsIgnoreCase(LanguageManager.getInstance().yesLeaveText))
         {
             InstancesManager.getInstance().leavePlayer(p, false);
             p.closeInventory();
         }
-        else if (name.equalsIgnoreCase("no"))
+        else if (name.equalsIgnoreCase(LanguageManager.getInstance().noLeaveText))
         {
             p.closeInventory();
         }
     }
-
 
     @EventHandler
     public void onInventoryClick(final InventoryDragEvent e)

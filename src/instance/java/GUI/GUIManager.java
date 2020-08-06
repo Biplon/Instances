@@ -1,5 +1,6 @@
 package instance.java.GUI;
 
+import instance.java.Config.LanguageManager;
 import instance.java.ManageInstances.InstancesManager;
 import instance.java.ManageInstances.PlayerInstance;
 import org.bukkit.Bukkit;
@@ -20,7 +21,7 @@ public class GUIManager
         return instance;
     }
 
-    private static final ItemStack defaultGuiItem = createGuiItem(Material.BLACK_STAINED_GLASS_PANE," ","");
+    private static final ItemStack defaultGuiItem = createGuiItem(Material.BLACK_STAINED_GLASS_PANE, " ", "");
 
     public GUIManager()
     {
@@ -28,21 +29,21 @@ public class GUIManager
     }
 
 
-    public void openJoinInstanceGUI(Player p,String instance)
+    public void openJoinInstanceGUI(Player p, String instance)
     {
-        Inventory inv =  Bukkit.createInventory(null, 45, "IN: Select "+ instance);
+        Inventory inv = Bukkit.createInventory(null, 45, "IN:" + LanguageManager.getInstance().joinWindowHeadText + " " + instance);
         for (int i = 0; i < 9; i++)
         {
             inv.setItem(i, defaultGuiItem);
             inv.setItem(i + 36, defaultGuiItem);
         }
-        setInstance(inv,instance);
+        setInstance(inv, instance);
         p.openInventory(inv);
     }
 
     public void openLeaveInstanceGUI(Player p)
     {
-        Inventory inv = Bukkit.createInventory(null, 27, "IN: Leave instance");
+        Inventory inv = Bukkit.createInventory(null, 27, "IN: " + LanguageManager.getInstance().leaveWindowHeadText);
         createDefaultLayoutSmall(inv);
         setLeave(inv);
         p.openInventory(inv);
@@ -50,7 +51,7 @@ public class GUIManager
 
     public void openReadyCheckGUI(Player p)
     {
-        Inventory inv = Bukkit.createInventory(null, 27, "IN: Ready check");
+        Inventory inv = Bukkit.createInventory(null, 27, "IN: " + LanguageManager.getInstance().readyWindowHeadText);
         createDefaultLayoutSmall(inv);
         setReady(inv);
         p.openInventory(inv);
@@ -58,30 +59,30 @@ public class GUIManager
 
     private void setLeave(Inventory inv)
     {
-        inv.setItem(12, createGuiItem(Material.GREEN_WOOL, "Yes leave", ""));
-        inv.setItem(14, createGuiItem(Material.RED_WOOL, "No", ""));
+        inv.setItem(12, createGuiItem(Material.GREEN_WOOL, LanguageManager.getInstance().yesLeaveText));
+        inv.setItem(14, createGuiItem(Material.RED_WOOL, LanguageManager.getInstance().noLeaveText));
     }
 
     private void setReady(Inventory inv)
     {
-        inv.setItem(12, createGuiItem(Material.GREEN_WOOL, "Ready", "", ""));
-        inv.setItem(14, createGuiItem(Material.RED_WOOL, "Not ready", "", ""));
+        inv.setItem(12, createGuiItem(Material.GREEN_WOOL, LanguageManager.getInstance().readyText));
+        inv.setItem(14, createGuiItem(Material.RED_WOOL, LanguageManager.getInstance().notReadyText));
     }
 
-    private void setInstance(Inventory inv,String instance)
+    private void setInstance(Inventory inv, String instance)
     {
         int count = 9;
-        if (InstancesManager.getInstance().getPlayerInstanceConfig(instance).getInstances() !=null)
+        if (InstancesManager.getInstance().getPlayerInstanceConfig(instance).getInstances() != null)
         {
-            for (PlayerInstance pi: InstancesManager.getInstance().getPlayerInstanceConfig(instance).getInstances())
+            for (PlayerInstance pi : InstancesManager.getInstance().getPlayerInstanceConfig(instance).getInstances())
             {
-                if (!pi.isInuse())
+                if (!pi.isInUse())
                 {
-                    inv.setItem(count, createGuiItem(Material.GREEN_DYE, pi.getMyConfig().getInstanceName()+":"+pi.getId(), pi.getMyGroup().getFullSlots() + "/" +  pi.getMyGroup().getGroupSize() + "Player", "Own equip: " + pi.getMyConfig().getPlayerOwnInventory()));
+                    inv.setItem(count, createGuiItem(Material.GREEN_DYE, pi.getMyConfig().getInstanceName() + ":" + pi.getId(), pi.getMyGroup().getFullSlots() + "/" + pi.getMyGroup().getGroupSize() + " " + LanguageManager.getInstance().playerText, LanguageManager.getInstance().ownInvText + ": " + pi.getMyConfig().getPlayerOwnInventory()));
                 }
                 else
                 {
-                    inv.setItem(count, createGuiItem(Material.GREEN_DYE, pi.getMyConfig().getInstanceName()+":"+pi.getId(), pi.getMyGroup().getFullSlots() + "/" +  pi.getMyGroup().getGroupSize() + "Player", "Own equip: " + pi.getMyConfig().getPlayerOwnInventory()));
+                    inv.setItem(count, createGuiItem(Material.GREEN_DYE, pi.getMyConfig().getInstanceName() + ":" + pi.getId(), pi.getMyGroup().getFullSlots() + "/" + pi.getMyGroup().getGroupSize() + " " + LanguageManager.getInstance().playerText, LanguageManager.getInstance().ownInvText + ": " + pi.getMyConfig().getPlayerOwnInventory()));
                 }
                 count++;
             }
@@ -117,7 +118,7 @@ public class GUIManager
         return item;
     }
 
-    private static ItemStack createGuiItem(final Material material,int amount, final String name, final String... lore)
+    private static ItemStack createGuiItem(final Material material, int amount, final String name, final String... lore)
     {
         final ItemStack item = new ItemStack(material, amount);
         final ItemMeta meta = item.getItemMeta();

@@ -3,16 +3,12 @@ package instance.java.ManageInstances;
 import instance.java.Instances;
 import instance.java.Struct.PlayerInstanceConfig;
 import instance.java.Utility.Utility;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+
 
 public class InstancesManager
 {
@@ -23,7 +19,7 @@ public class InstancesManager
         return instance;
     }
 
-    private List<PlayerInstanceConfig> instances = new ArrayList<>();
+    private final List<PlayerInstanceConfig> instances = new ArrayList<>();
 
     public InstancesManager()
     {
@@ -119,14 +115,7 @@ public class InstancesManager
         {
             if (in.getInstanceName().equals(instanceName))
             {
-                if (in.canJoin(p))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return in.canJoin(p);
             }
 
         }
