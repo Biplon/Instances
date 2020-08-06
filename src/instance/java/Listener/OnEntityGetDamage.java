@@ -1,4 +1,4 @@
-package instance.java.Event;
+package instance.java.Listener;
 
 import instance.java.ManageInstances.InstancesManager;
 import instance.java.ManageInstances.PlayerInstance;

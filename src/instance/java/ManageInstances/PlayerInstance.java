@@ -6,6 +6,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import instance.java.Config.LanguageManager;
+import instance.java.Enum.EventType;
 import instance.java.Enum.InstancesType;
 import instance.java.Group.Group;
 import instance.java.Instances;
@@ -17,8 +18,7 @@ import instance.java.Struct.CreatureSpawnPoint;
 import instance.java.Struct.CreatureWaveEntity;
 import instance.java.Struct.PlayerInstanceConfig;
 import instance.java.Struct.PlayerSpawnPoint;
-import instance.java.Task.TaskCreatureWave;
-import instance.java.Task.TaskEvent;
+import instance.java.Task.*;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -217,13 +217,21 @@ public class PlayerInstance
                 return;
             case ExecuteCommand:
                 String command = ((RepetitiveExecuteCommand) repetitive).getCommand();
-                for (Player p : myGroup.getGroup())
+                if (((RepetitiveExecuteCommand) repetitive).isPlayerCommand())
                 {
-                    if (p != null)
+                    for (Player p : myGroup.getGroup())
                     {
-                        Bukkit.getScheduler().callSyncMethod(Instances.getInstance(), () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", p.getName())));
+                        if (p != null)
+                        {
+                            Bukkit.getScheduler().callSyncMethod(Instances.getInstance(), () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", p.getName())));
+                        }
                     }
                 }
+                else
+                {
+                    Bukkit.getScheduler().callSyncMethod(Instances.getInstance(), () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
+                }
+
         }
     }
 
@@ -270,7 +278,41 @@ public class PlayerInstance
 
     public void startTaskEvent()
     {
-        //magic
+        EventType typ = ((TaskEvent)myConfig.getTasks().get(taskCount)).getEventType();
+        switch (typ)
+        {
+            case ChangePlayerSpawn:
+                activePlayerSpawn = playerSpawnPoints.get(((TaskEventChangePlayerSpawn)myConfig.getTasks().get(taskCount)).getSpawnPointId());
+                break;
+            case SendMessage:
+                if (((TaskEventSendMessage)myConfig.getTasks().get(taskCount)).isActionbar())
+                {
+                    sendActionbarMessage((((TaskEventSendMessage)myConfig.getTasks().get(taskCount)).getText()));
+                }
+                else
+                {
+                    sendMessage(((TaskEventSendMessage)myConfig.getTasks().get(taskCount)).getText());
+                }
+                break;
+            case ExecuteCommand:
+                String command = ((TaskEventExecuteCommand)myConfig.getTasks().get(taskCount)).getCommand();
+                if (((TaskEventExecuteCommand)myConfig.getTasks().get(taskCount)).isPlayerCommand())
+                {
+                    for (Player p : myGroup.getGroup())
+                    {
+                        if (p != null)
+                        {
+                            Bukkit.getScheduler().callSyncMethod(Instances.getInstance(), () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", p.getName())));
+                        }
+                    }
+                }
+                else
+                {
+                    Bukkit.getScheduler().callSyncMethod(Instances.getInstance(), () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
+                }
+                break;
+        }
+        taskCount++;
         initTaskStart();
     }
 

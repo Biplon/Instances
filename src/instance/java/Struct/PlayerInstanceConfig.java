@@ -1,5 +1,6 @@
 package instance.java.Struct;
 
+import instance.java.Enum.EventType;
 import instance.java.Enum.InstancesType;
 import instance.java.Enum.RepetitiveType;
 import instance.java.Enum.TaskType;
@@ -10,9 +11,7 @@ import instance.java.Repetitive.Repetitive;
 import instance.java.Repetitive.RepetitiveExecuteCommand;
 import instance.java.Repetitive.RepetitiveSendMassage;
 import instance.java.Repetitive.RepetitiveSpawnCreature;
-import instance.java.Task.Task;
-import instance.java.Task.TaskCreatureWave;
-import instance.java.Task.TaskEvent;
+import instance.java.Task.*;
 import instance.java.Utility.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -203,7 +202,19 @@ public class PlayerInstanceConfig
                     }
                     else if (TaskType.valueOf(cfg.getString("task." + count + ".type")) == TaskType.Event)
                     {
-                        tasks.add(new TaskEvent(count));
+                        if (EventType.valueOf(cfg.getString("task." + count + ".type.eventtype"))  == EventType.ChangePlayerSpawn)
+                        {
+                            tasks.add(new TaskEventChangePlayerSpawn(count,Double.parseDouble(Objects.requireNonNull(cfg.getString("task." + count + ".cooldown"))), Boolean.parseBoolean(Objects.requireNonNull(cfg.getString("task." + count + ".autostart"))),EventType.ChangePlayerSpawn ,cfg.getInt("task." + count + ".spawnid")));
+                        }
+                        else if(EventType.valueOf(cfg.getString("task." + count + ".type.eventtype"))  == EventType.ExecuteCommand)
+                        {
+                            tasks.add(new TaskEventExecuteCommand(count,Double.parseDouble(Objects.requireNonNull(cfg.getString("task." + count + ".cooldown"))), Boolean.parseBoolean(Objects.requireNonNull(cfg.getString("task." + count + ".autostart"))),EventType.ExecuteCommand,cfg.getBoolean("task." + count + ".playercommand"),cfg.getString("task." + count + ".command")));
+                        }
+                        else if(EventType.valueOf(cfg.getString("task." + count + ".type.eventtype"))  == EventType.SendMessage)
+                        {
+                            tasks.add(new TaskEventSendMessage(count,Double.parseDouble(Objects.requireNonNull(cfg.getString("task." + count + ".cooldown"))), Boolean.parseBoolean(Objects.requireNonNull(cfg.getString("task." + count + ".autostart"))),EventType.SendMessage,cfg.getBoolean("task." + count + ".actionbar"),cfg.getString("task." + count + ".text")));
+                        }
+
                     }
                     count++;
                 }
@@ -225,7 +236,7 @@ public class PlayerInstanceConfig
                 }
                 else if (RepetitiveType.valueOf(cfg.getString("repetitive." + count + ".type")) == RepetitiveType.ExecuteCommand)
                 {
-                    repetitives.add(new RepetitiveExecuteCommand(RepetitiveType.ExecuteCommand,cfg.getInt("repetitive." + count + ".timer"),cfg.getString("repetitive." + count + ".command")));
+                    repetitives.add(new RepetitiveExecuteCommand(RepetitiveType.ExecuteCommand,cfg.getInt("repetitive." + count + ".timer"),cfg.getString("repetitive." + count + ".command"),cfg.getBoolean("repetitive." + count + ".playercommand")));
                 }
                 else if (RepetitiveType.valueOf(cfg.getString("repetitive." + count + ".type")) == RepetitiveType.SendMassage)
                 {
