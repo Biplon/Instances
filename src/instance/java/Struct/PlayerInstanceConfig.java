@@ -4,8 +4,9 @@ import instance.java.Enum.EventType;
 import instance.java.Enum.InstancesType;
 import instance.java.Enum.RepetitiveType;
 import instance.java.Enum.TaskType;
+import instance.java.Instance.PlayerInstanceWave;
 import instance.java.Instances;
-import instance.java.ManageInstances.PlayerInstance;
+import instance.java.Instance.PlayerInstance;
 import instance.java.ManageInstances.PlayerVisitInstanceManager;
 import instance.java.Repetitive.Repetitive;
 import instance.java.Repetitive.RepetitiveExecuteCommand;
@@ -357,9 +358,12 @@ public class PlayerInstanceConfig
 
     public void clearEnemyList()
     {
-        for (PlayerInstance pi: instances)
+        if (instancesType == InstancesType.Waves)
         {
-            pi.clearEnemyList();
+            for (PlayerInstance pi: instances)
+            {
+                ((PlayerInstanceWave)pi).clearEnemyList();
+            }
         }
     }
 

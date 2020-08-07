@@ -1,7 +1,7 @@
 package instance.java.Listener;
 
 import instance.java.ManageInstances.InstancesManager;
-import instance.java.ManageInstances.PlayerInstance;
+import instance.java.Instance.PlayerInstance;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,7 +32,7 @@ public class OnEntityGetDamage implements Listener
                     {
                         p.removePotionEffect(effect.getType());
                     }
-                    in.reduceGroupLive(p);
+                    in.reduceGroupLive();
                     event.setCancelled(true);
                 }
             }

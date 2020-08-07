@@ -4,5 +4,12 @@ public enum TriggerType
 {
     OnCreatureDeath,
     OnPlayerDeath,
-    OnRegionEnter
+    OnRegionEnter,
+    OnRegionLeave,
+    OnChat,
+    OnBlockClick,
+    OnClickWithItem,
+    OnLeverChange,
+    OnPressurePlateActivate,
+    OnButtonClick
 }

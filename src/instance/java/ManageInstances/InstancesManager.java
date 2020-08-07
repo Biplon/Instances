@@ -1,5 +1,6 @@
 package instance.java.ManageInstances;
 
+import instance.java.Instance.PlayerInstance;
 import instance.java.Instances;
 import instance.java.Struct.PlayerInstanceConfig;
 import instance.java.Utility.Utility;

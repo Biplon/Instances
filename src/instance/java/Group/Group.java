@@ -2,7 +2,7 @@ package instance.java.Group;
 
 import instance.java.Config.LanguageManager;
 import instance.java.GUI.GUIManager;
-import instance.java.ManageInstances.PlayerInstance;
+import instance.java.Instance.PlayerInstance;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import pts.java.api.PlayerManagement;
