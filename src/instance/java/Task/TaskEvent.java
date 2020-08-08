@@ -1,22 +1,22 @@
 package instance.java.Task;
 
-import instance.java.Enum.EventType;
+import instance.java.Enum.EEventType;
 
 public class TaskEvent extends Task
 {
-    private final EventType eventType;
+    private final EEventType EEventType;
 
-    public EventType getEventType()
+    public EEventType getEEventType()
     {
-        return eventType;
+        return EEventType;
     }
 
-    public TaskEvent(int number, double wavePreCountdown, boolean autostart,EventType eventType)
+    public TaskEvent(int number, double wavePreCountdown, boolean autostart, EEventType EEventType)
     {
         this.number = number;
         this.preCountdown = wavePreCountdown;
         this.autostart = autostart;
-        this.eventType = eventType;
+        this.EEventType = EEventType;
     }
 
     public void executeEvent()

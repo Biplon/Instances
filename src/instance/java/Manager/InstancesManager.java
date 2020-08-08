@@ -1,4 +1,4 @@
-package instance.java.ManageInstances;
+package instance.java.Manager;
 
 import instance.java.Instance.PlayerInstance;
 import instance.java.Instances;

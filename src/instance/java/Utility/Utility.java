@@ -1,5 +1,8 @@
 package instance.java.Utility;
 
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+
 import java.io.File;
 import java.util.List;
 import java.util.Objects;

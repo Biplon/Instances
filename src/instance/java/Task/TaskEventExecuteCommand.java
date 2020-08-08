@@ -1,6 +1,6 @@
 package instance.java.Task;
 
-import instance.java.Enum.EventType;
+import instance.java.Enum.EEventType;
 
 public class TaskEventExecuteCommand extends TaskEvent
 {
@@ -18,9 +18,9 @@ public class TaskEventExecuteCommand extends TaskEvent
         return command;
     }
 
-    public TaskEventExecuteCommand(int number, double wavePreCountdown, boolean autostart, EventType eventType, boolean playerCommand, String command)
+    public TaskEventExecuteCommand(int number, double wavePreCountdown, boolean autostart, EEventType EEventType, boolean playerCommand, String command)
     {
-        super(number, wavePreCountdown, autostart, eventType);
+        super(number, wavePreCountdown, autostart, EEventType);
         this.playerCommand = playerCommand;
         this.command = command;
     }

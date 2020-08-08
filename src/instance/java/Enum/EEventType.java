@@ -1,6 +1,6 @@
 package instance.java.Enum;
 
-public enum EventType
+public enum EEventType
 {
     ChangePlayerSpawn,
     SendMessage,

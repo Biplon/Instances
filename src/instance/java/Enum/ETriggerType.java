@@ -1,6 +1,6 @@
 package instance.java.Enum;
 
-public enum TriggerType
+public enum ETriggerType
 {
     OnCreatureDeath,
     OnPlayerDeath,

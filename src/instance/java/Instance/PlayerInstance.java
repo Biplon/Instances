@@ -6,20 +6,16 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import instance.java.Config.LanguageManager;
-import instance.java.Enum.EventType;
-import instance.java.Enum.InstancesType;
 import instance.java.Group.Group;
 import instance.java.Instances;
-import instance.java.ManageInstances.PlayerVisitInstanceManager;
+import instance.java.Manager.PlayerVisitInstanceManager;
 import instance.java.Repetitive.Repetitive;
 import instance.java.Repetitive.RepetitiveExecuteCommand;
 import instance.java.Repetitive.RepetitiveSendMassage;
 import instance.java.Repetitive.RepetitiveSpawnCreature;
 import instance.java.Struct.CreatureSpawnPoint;
-import instance.java.Struct.CreatureWaveEntity;
 import instance.java.Struct.PlayerInstanceConfig;
 import instance.java.Struct.PlayerSpawnPoint;
-import instance.java.Task.*;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -29,7 +25,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -49,6 +44,10 @@ public class PlayerInstance
 
     final ArrayList<PlayerSpawnPoint> playerSpawnPoints = new ArrayList();
 
+    final ArrayList<ProtectedRegion> subRegion = new ArrayList<>();
+
+    final ArrayList<Location> triggerLocation = new ArrayList<>();
+
     public ArrayList<Repetitive> repetitives = new ArrayList();
 
     private int[] repeitivesBukkitTask;
@@ -57,9 +56,19 @@ public class PlayerInstance
 
     final Group myGroup;
 
+    public ArrayList<Location> getTriggerLocation()
+    {
+        return triggerLocation;
+    }
+
     public Group getMyGroup()
     {
         return myGroup;
+    }
+
+    public ProtectedRegion getMyRegion()
+    {
+        return myRegion;
     }
 
     int groupLivesCurrent;
@@ -79,6 +88,11 @@ public class PlayerInstance
     public PlayerInstanceConfig getMyConfig()
     {
         return myConfig;
+    }
+
+    public ArrayList<ProtectedRegion> getSubRegion()
+    {
+        return subRegion;
     }
 
     public int getId()
@@ -131,8 +145,44 @@ public class PlayerInstance
             {
                 isnext = false;
             }
+        }
+        activePlayerSpawn = playerSpawnPoints.get(0);
+        isnext = true;
+        count = 0;
+        String region;
+        while (isnext)
+        {
+            if (cfg.getString("subregion." + count + ".name") != null)
+            {
+                region = cfg.getString("subregion." + count + ".name");
+                assert region != null;
+                subRegion.add(regions.getRegion(Objects.requireNonNull(cfg.getString(region))));
+                count++;
+            }
+            else
+            {
+                isnext = false;
+            }
+        }
 
-            activePlayerSpawn = playerSpawnPoints.get(0);
+        isnext = true;
+        count = 0;
+        String[] tcoords;
+        while (isnext)
+        {
+            if (cfg.getString("triggerpos." + count + ".coords") != null)
+            {
+                tcoords = cfg.getString("triggerpos." + count + ".coords").split(",");
+                int x = Integer.parseInt(tcoords[0]);
+                int y = Integer.parseInt(tcoords[1]);
+                int z = Integer.parseInt(tcoords[2]);
+                triggerLocation.add(new Location(myWorld,x,y,z));
+                count++;
+            }
+            else
+            {
+                isnext = false;
+            }
         }
     }
 

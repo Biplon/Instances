@@ -1,22 +1,25 @@
 package instance.java.Struct;
 
-import instance.java.Enum.EventType;
-import instance.java.Enum.InstancesType;
-import instance.java.Enum.RepetitiveType;
-import instance.java.Enum.TaskType;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import instance.java.Enum.*;
 import instance.java.Instance.PlayerInstanceWave;
 import instance.java.Instances;
 import instance.java.Instance.PlayerInstance;
-import instance.java.ManageInstances.PlayerVisitInstanceManager;
+import instance.java.Manager.EffectPresetManager;
+import instance.java.Manager.PlayerVisitInstanceManager;
 import instance.java.Repetitive.Repetitive;
 import instance.java.Repetitive.RepetitiveExecuteCommand;
 import instance.java.Repetitive.RepetitiveSendMassage;
 import instance.java.Repetitive.RepetitiveSpawnCreature;
 import instance.java.Task.*;
+import instance.java.Trigger.*;
 import instance.java.Utility.Utility;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -40,7 +43,7 @@ public class PlayerInstanceConfig
 
     private final int groupMinSize;
 
-    private final InstancesType instancesType;
+    private final EInstancesType instancesType;
 
     private final ArrayList<String> instancesStartCommands = new ArrayList();
 
@@ -51,6 +54,8 @@ public class PlayerInstanceConfig
     private final ArrayList<Task> tasks = new ArrayList();
 
     private final ArrayList<Repetitive> repetitives = new ArrayList();
+
+    private final ArrayList<Trigger> trigger = new ArrayList<>();
 
     public String getInstanceName()
     {
@@ -67,7 +72,7 @@ public class PlayerInstanceConfig
         return playerOwnInventory;
     }
 
-    public InstancesType getInstancesType()
+    public EInstancesType getInstancesType()
     {
         return instancesType;
     }
@@ -116,10 +121,11 @@ public class PlayerInstanceConfig
         this.visitsPerHour = cfg.getInt("general.visitsPerHour");
         this.groupLives = cfg.getInt("general.groupLives");
         this.playerOwnInventory =  cfg.getBoolean("general.playerOwnInventory");
-        this.instancesType =  InstancesType.valueOf(cfg.getString("general.instancesType"));
+        this.instancesType =  EInstancesType.valueOf(cfg.getString("general.instancesType"));
         this.groupSize =  cfg.getInt("general.groupsize");
         this.groupMinSize =  cfg.getInt("general.groupminsize");
         PlayerVisitInstanceManager.getInstance().addInstance(instanceName);
+        loadTrigger(cfg);
         boolean isnext = true;
         int count = 0;
         while (isnext)
@@ -175,7 +181,7 @@ public class PlayerInstanceConfig
         }
         boolean isnext2;
         int count2 = 0;
-        if (instancesType == InstancesType.Waves)
+        if (instancesType == instancesType.Waves)
         {
             isnext = true;
             count = 0;
@@ -185,7 +191,7 @@ public class PlayerInstanceConfig
                 count2 = 0;
                 if (cfg.getString("task." + count + ".cooldown") != null)
                 {
-                    if (TaskType.valueOf(cfg.getString("task." + count + ".type")) == TaskType.CreatureWave)
+                    if (ETaskType.valueOf(cfg.getString("task." + count + ".type")) == ETaskType.CreatureWave)
                     {
                         tasks.add(new TaskCreatureWave(count, Double.parseDouble(Objects.requireNonNull(cfg.getString("task." + count + ".cooldown"))), Boolean.parseBoolean(Objects.requireNonNull(cfg.getString("task." + count + ".autostart"))),count));
                         while (isnext2)
@@ -201,19 +207,19 @@ public class PlayerInstanceConfig
                             }
                         }
                     }
-                    else if (TaskType.valueOf(cfg.getString("task." + count + ".type")) == TaskType.Event)
+                    else if (ETaskType.valueOf(cfg.getString("task." + count + ".type")) == ETaskType.Event)
                     {
-                        if (EventType.valueOf(cfg.getString("task." + count + ".type.eventtype"))  == EventType.ChangePlayerSpawn)
+                        if (EEventType.valueOf(cfg.getString("task." + count + ".type.eventtype"))  == EEventType.ChangePlayerSpawn)
                         {
-                            tasks.add(new TaskEventChangePlayerSpawn(count,Double.parseDouble(Objects.requireNonNull(cfg.getString("task." + count + ".cooldown"))), Boolean.parseBoolean(Objects.requireNonNull(cfg.getString("task." + count + ".autostart"))),EventType.ChangePlayerSpawn ,cfg.getInt("task." + count + ".spawnid")));
+                            tasks.add(new TaskEventChangePlayerSpawn(count,Double.parseDouble(Objects.requireNonNull(cfg.getString("task." + count + ".cooldown"))), Boolean.parseBoolean(Objects.requireNonNull(cfg.getString("task." + count + ".autostart"))), EEventType.ChangePlayerSpawn ,cfg.getInt("task." + count + ".spawnid")));
                         }
-                        else if(EventType.valueOf(cfg.getString("task." + count + ".type.eventtype"))  == EventType.ExecuteCommand)
+                        else if(EEventType.valueOf(cfg.getString("task." + count + ".type.eventtype"))  == EEventType.ExecuteCommand)
                         {
-                            tasks.add(new TaskEventExecuteCommand(count,Double.parseDouble(Objects.requireNonNull(cfg.getString("task." + count + ".cooldown"))), Boolean.parseBoolean(Objects.requireNonNull(cfg.getString("task." + count + ".autostart"))),EventType.ExecuteCommand,cfg.getBoolean("task." + count + ".playercommand"),cfg.getString("task." + count + ".command")));
+                            tasks.add(new TaskEventExecuteCommand(count,Double.parseDouble(Objects.requireNonNull(cfg.getString("task." + count + ".cooldown"))), Boolean.parseBoolean(Objects.requireNonNull(cfg.getString("task." + count + ".autostart"))), EEventType.ExecuteCommand,cfg.getBoolean("task." + count + ".playercommand"),cfg.getString("task." + count + ".command")));
                         }
-                        else if(EventType.valueOf(cfg.getString("task." + count + ".type.eventtype"))  == EventType.SendMessage)
+                        else if(EEventType.valueOf(cfg.getString("task." + count + ".type.eventtype"))  == EEventType.SendMessage)
                         {
-                            tasks.add(new TaskEventSendMessage(count,Double.parseDouble(Objects.requireNonNull(cfg.getString("task." + count + ".cooldown"))), Boolean.parseBoolean(Objects.requireNonNull(cfg.getString("task." + count + ".autostart"))),EventType.SendMessage,cfg.getBoolean("task." + count + ".actionbar"),cfg.getString("task." + count + ".text")));
+                            tasks.add(new TaskEventSendMessage(count,Double.parseDouble(Objects.requireNonNull(cfg.getString("task." + count + ".cooldown"))), Boolean.parseBoolean(Objects.requireNonNull(cfg.getString("task." + count + ".autostart"))), EEventType.SendMessage,cfg.getBoolean("task." + count + ".actionbar"),cfg.getString("task." + count + ".text")));
                         }
 
                     }
@@ -231,17 +237,17 @@ public class PlayerInstanceConfig
         {
             if (cfg.getString("repetitive." + count + ".type") != null)
             {
-                if (RepetitiveType.valueOf(cfg.getString("repetitive." + count + ".type")) == RepetitiveType.SpawnCreature)
+                if (ERepetitiveType.valueOf(cfg.getString("repetitive." + count + ".type")) == ERepetitiveType.SpawnCreature)
                 {
-                    repetitives.add(new RepetitiveSpawnCreature(RepetitiveType.SpawnCreature,cfg.getInt("repetitive." + count + ".timer"),cfg.getString("repetitive." + count + ".monster"),cfg.getInt("repetitive." + count + ".amount"),cfg.getInt("repetitive." + count + ".spawnpointid")));
+                    repetitives.add(new RepetitiveSpawnCreature(ERepetitiveType.SpawnCreature,cfg.getInt("repetitive." + count + ".timer"),cfg.getString("repetitive." + count + ".monster"),cfg.getInt("repetitive." + count + ".amount"),cfg.getInt("repetitive." + count + ".spawnpointid")));
                 }
-                else if (RepetitiveType.valueOf(cfg.getString("repetitive." + count + ".type")) == RepetitiveType.ExecuteCommand)
+                else if (ERepetitiveType.valueOf(cfg.getString("repetitive." + count + ".type")) == ERepetitiveType.ExecuteCommand)
                 {
-                    repetitives.add(new RepetitiveExecuteCommand(RepetitiveType.ExecuteCommand,cfg.getInt("repetitive." + count + ".timer"),cfg.getString("repetitive." + count + ".command"),cfg.getBoolean("repetitive." + count + ".playercommand")));
+                    repetitives.add(new RepetitiveExecuteCommand(ERepetitiveType.ExecuteCommand,cfg.getInt("repetitive." + count + ".timer"),cfg.getString("repetitive." + count + ".command"),cfg.getBoolean("repetitive." + count + ".playercommand")));
                 }
-                else if (RepetitiveType.valueOf(cfg.getString("repetitive." + count + ".type")) == RepetitiveType.SendMassage)
+                else if (ERepetitiveType.valueOf(cfg.getString("repetitive." + count + ".type")) == ERepetitiveType.SendMassage)
                 {
-                    repetitives.add(new RepetitiveSendMassage(RepetitiveType.SendMassage,cfg.getInt("repetitive." + count + ".timer"),cfg.getString("repetitive." + count + ".text"),cfg.getBoolean("repetitive." + count + ".actionbar")));
+                    repetitives.add(new RepetitiveSendMassage(ERepetitiveType.SendMassage,cfg.getInt("repetitive." + count + ".timer"),cfg.getString("repetitive." + count + ".text"),cfg.getBoolean("repetitive." + count + ".actionbar")));
                 }
                 count++;
             }
@@ -269,6 +275,97 @@ public class PlayerInstanceConfig
         {
             pi.repetitives = repetitives;
         }
+    }
+
+    private void loadTrigger(FileConfiguration cfg)
+    {
+        boolean isnext = true;
+        int count = 0;
+        ETriggerType type;
+        while (isnext)
+        {
+            if (cfg.getString("trigger." + count +".type") != null)
+            {
+                type = ETriggerType.valueOf(cfg.getString("trigger." + count +".type"));
+                switch (type)
+                {
+                    case OnCreatureDeath:
+                        trigger.add(new TriggerOnCreatureDeath(count,getSubRegions(Objects.requireNonNull(cfg.getString("trigger." + count + ".regionid"))), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")),cfg.getBoolean("trigger." + count + ".singleuse"), EntityType.valueOf(cfg.getString("trigger." + count + ".creaturetype")),cfg.getString("trigger." + count + ".creaturename")));
+                        break;
+                    case OnPlayerDeath:
+                        trigger.add(new TriggerOnPlayerDeath(count,getSubRegions(Objects.requireNonNull(cfg.getString("trigger." + count + ".regionid"))), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")),cfg.getBoolean("trigger." + count + ".singleuse")));
+                        break;
+                    case OnRegionEnter:
+                        trigger.add(new TriggerOnRegionEnter(count,getSubRegions(Objects.requireNonNull(cfg.getString("trigger." + count + ".regionid"))), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")),cfg.getBoolean("trigger." + count + ".singleuse")));
+                        break;
+                    case OnRegionLeave:
+                        trigger.add(new TriggerOnRegionLeave(count,getSubRegions(Objects.requireNonNull(cfg.getString("trigger." + count + ".regionid"))), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")),cfg.getBoolean("trigger." + count + ".singleuse")));
+                        break;
+                    case OnChat:
+                        trigger.add(new TriggerOnChat(count,getSubRegions(Objects.requireNonNull(cfg.getString("trigger." + count + ".regionid"))),cfg.getString("trigger." + count + ".text"), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")),cfg.getBoolean("trigger." + count + ".singleuse")));
+                        break;
+                    case OnBlockClick:
+                        trigger.add(new TriggerOnBlockClick(count,getTriggerLocations(cfg.getInt("trigger." + count + ".posid")), Material.valueOf(Objects.requireNonNull(cfg.getString("trigger." + count + ".material"))),cfg.getBoolean("trigger." + count + ".rightclick"), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")),cfg.getBoolean("trigger." + count + ".singleuse")));
+                        break;
+                    case OnClickWithItem:
+                        if (cfg.getBoolean("trigger." + count + ".customitem"))
+                        {
+                            trigger.add(new TriggerOnClickWithItem(count,getTriggerLocations(cfg.getInt("trigger." + count + ".posid")),cfg.getBoolean("trigger." + count + ".airclick"),cfg.getBoolean("trigger." + count + ".rightclick"),true,cfg.getString("trigger." + count + ".lore1"), Material.valueOf(Objects.requireNonNull(cfg.getString("trigger." + count + ".material"))), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")),cfg.getBoolean("trigger." + count + ".singleuse")));
+                        }
+                        else
+                        {
+                            trigger.add(new TriggerOnClickWithItem(count,getTriggerLocations(cfg.getInt("trigger." + count + ".posid")),cfg.getBoolean("trigger." + count + ".airclick"),cfg.getBoolean("trigger." + count + ".rightclick"),false, Material.valueOf(Objects.requireNonNull(cfg.getString("trigger." + count + ".material"))), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")),cfg.getBoolean("trigger." + count + ".singleuse")));
+                        }
+
+                        break;
+                    case OnLeverChange:
+                        trigger.add(new TriggerOnLeverChange(count,getTriggerLocations(cfg.getInt("trigger." + count + ".posid")),cfg.getBoolean("trigger." + count + ".powered"), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")),cfg.getBoolean("trigger." + count + ".singleuse")));
+                        break;
+                    case OnPressurePlateActivate:
+                        trigger.add(new TriggerOnPressurePlateActivate(count,getTriggerLocations(cfg.getInt("trigger." + count + ".posid")), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")),cfg.getBoolean("trigger." + count + ".singleuse")));
+                        break;
+                    case OnButtonClick:
+                        trigger.add(new TriggerOnButtonClick(count,getTriggerLocations(cfg.getInt("trigger." + count + ".posid")), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")),cfg.getBoolean("trigger." + count + ".singleuse")));
+                        break;
+                }
+                count++;
+            }
+            else
+            {
+                isnext = false;
+            }
+        }
+    }
+
+    private ProtectedRegion[] getSubRegions(String id)
+    {
+        ProtectedRegion[] reg = new ProtectedRegion[instances.length];
+        if (id.equals("main"))
+        {
+            for (int i = 0; i < instances.length; i++)
+            {
+                reg[i] = instances[i].getMyRegion();
+            }
+        }
+        else
+        {
+            int iid = Integer.parseInt(id);
+            for (int i = 0; i < instances.length; i++)
+            {
+                reg[i] = instances[i].getSubRegion().get(iid);
+            }
+        }
+        return reg;
+    }
+
+    private Location[] getTriggerLocations(int id)
+    {
+        Location[] reg = new Location[instances.length];
+        for (int i = 0; i < instances.length; i++)
+        {
+            reg[i] = instances[i].getTriggerLocation().get(id);
+        }
+        return reg;
     }
 
     private boolean createInstances()
@@ -358,7 +455,7 @@ public class PlayerInstanceConfig
 
     public void clearEnemyList()
     {
-        if (instancesType == InstancesType.Waves)
+        if (instancesType == instancesType.Waves)
         {
             for (PlayerInstance pi: instances)
             {

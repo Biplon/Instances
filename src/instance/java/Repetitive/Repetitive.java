@@ -1,10 +1,10 @@
 package instance.java.Repetitive;
 
-import instance.java.Enum.RepetitiveType;
+import instance.java.Enum.ERepetitiveType;
 
 public abstract class Repetitive
 {
-    private final RepetitiveType type;
+    private final ERepetitiveType type;
 
     private final int timer;
 
@@ -13,12 +13,12 @@ public abstract class Repetitive
         return timer;
     }
 
-    public RepetitiveType getType()
+    public ERepetitiveType getType()
     {
         return type;
     }
 
-    public Repetitive(RepetitiveType type,int timer)
+    public Repetitive(ERepetitiveType type, int timer)
     {
         this.type = type;
         this.timer = timer;

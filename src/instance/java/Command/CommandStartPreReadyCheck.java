@@ -1,9 +1,7 @@
 package instance.java.Command;
 
 import instance.java.Config.LanguageManager;
-import instance.java.GUI.GUIManager;
-import instance.java.ManageInstances.InstancesManager;
-import org.bukkit.Bukkit;
+import instance.java.Manager.InstancesManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

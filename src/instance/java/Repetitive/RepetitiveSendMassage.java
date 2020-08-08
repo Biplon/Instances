@@ -1,6 +1,6 @@
 package instance.java.Repetitive;
 
-import instance.java.Enum.RepetitiveType;
+import instance.java.Enum.ERepetitiveType;
 
 public class RepetitiveSendMassage extends Repetitive
 {
@@ -18,7 +18,7 @@ public class RepetitiveSendMassage extends Repetitive
         return text;
     }
 
-    public RepetitiveSendMassage(RepetitiveType type, int timer,String text,boolean actionbar)
+    public RepetitiveSendMassage(ERepetitiveType type, int timer, String text, boolean actionbar)
     {
         super(type, timer);
         this.text = text;

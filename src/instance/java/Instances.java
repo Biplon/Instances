@@ -5,13 +5,11 @@ import instance.java.Command.CommandLeaveInstance;
 import instance.java.Command.CommandStartPreReadyCheck;
 import instance.java.Config.ConfigManager;
 import instance.java.Config.LanguageManager;
-import instance.java.Listener.InventoryClick;
-import instance.java.Listener.OnEntityDeath;
-import instance.java.Listener.OnEntityGetDamage;
-import instance.java.Listener.OnPlayerQuit;
+import instance.java.Listener.*;
 import instance.java.GUI.GUIManager;
-import instance.java.ManageInstances.InstancesManager;
-import instance.java.ManageInstances.PlayerVisitInstanceManager;
+import instance.java.Manager.EffectPresetManager;
+import instance.java.Manager.InstancesManager;
+import instance.java.Manager.PlayerVisitInstanceManager;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -29,12 +27,14 @@ public class Instances extends JavaPlugin
     public void onEnable()
     {
         instance = this;
+        new EffectPresetManager();
         new InstancesManager();
         new PlayerVisitInstanceManager();
         new GUIManager();
         new ConfigManager();
         ConfigManager.getInstance().loadConfig();
         new LanguageManager();
+        EffectPresetManager.getInstance().loadEffectPresets();
         LanguageManager.getInstance().loadLang();
         InstancesManager.getInstance().loadInstances();
         regCommands();
@@ -56,6 +56,7 @@ public class Instances extends JavaPlugin
         pm.registerEvents(new InventoryClick(), this);
         pm.registerEvents(new OnPlayerQuit(), this);
         pm.registerEvents(new OnEntityGetDamage(), this);
+        pm.registerEvents(new OnPlayerInteract(), this);
     }
 
     @Override

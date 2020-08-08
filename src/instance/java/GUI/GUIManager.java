@@ -1,7 +1,7 @@
 package instance.java.GUI;
 
 import instance.java.Config.LanguageManager;
-import instance.java.ManageInstances.InstancesManager;
+import instance.java.Manager.InstancesManager;
 import instance.java.Instance.PlayerInstance;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

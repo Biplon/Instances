@@ -1,6 +1,6 @@
 package instance.java.Listener;
 
-import instance.java.ManageInstances.InstancesManager;
+import instance.java.Manager.InstancesManager;
 import instance.java.Instance.PlayerInstance;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;

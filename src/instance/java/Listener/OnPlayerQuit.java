@@ -1,6 +1,6 @@
 package instance.java.Listener;
 
-import instance.java.ManageInstances.InstancesManager;
+import instance.java.Manager.InstancesManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;

@@ -1,6 +1,6 @@
 package instance.java.Task;
 
-import instance.java.Enum.EventType;
+import instance.java.Enum.EEventType;
 
 public class TaskEventChangePlayerSpawn extends TaskEvent
 {
@@ -11,9 +11,9 @@ public class TaskEventChangePlayerSpawn extends TaskEvent
         return spawnPointId;
     }
 
-    public TaskEventChangePlayerSpawn(int number, double wavePreCountdown, boolean autostart, EventType eventType, int spawnPointId)
+    public TaskEventChangePlayerSpawn(int number, double wavePreCountdown, boolean autostart, EEventType EEventType, int spawnPointId)
     {
-        super(number, wavePreCountdown, autostart, eventType);
+        super(number, wavePreCountdown, autostart, EEventType);
         this.spawnPointId = spawnPointId;
     }
 }

@@ -1,7 +1,6 @@
 package instance.java.Repetitive;
 
-import instance.java.Enum.RepetitiveType;
-import instance.java.Struct.CreatureSpawnPoint;
+import instance.java.Enum.ERepetitiveType;
 
 public class RepetitiveSpawnCreature extends Repetitive
 {
@@ -26,7 +25,7 @@ public class RepetitiveSpawnCreature extends Repetitive
         return sp;
     }
 
-    public RepetitiveSpawnCreature(RepetitiveType type, int timer, String creature, int amount, int sp)
+    public RepetitiveSpawnCreature(ERepetitiveType type, int timer, String creature, int amount, int sp)
     {
         super(type, timer);
         this.creature = creature;

@@ -1,6 +1,6 @@
 package instance.java.Task;
 
-import instance.java.Enum.EventType;
+import instance.java.Enum.EEventType;
 
 public class TaskEventSendMessage extends TaskEvent
 {
@@ -18,9 +18,9 @@ public class TaskEventSendMessage extends TaskEvent
         return text;
     }
 
-    public TaskEventSendMessage(int number, double wavePreCountdown, boolean autostart, EventType eventType, boolean actionbar, String text)
+    public TaskEventSendMessage(int number, double wavePreCountdown, boolean autostart, EEventType EEventType, boolean actionbar, String text)
     {
-        super(number, wavePreCountdown, autostart, eventType);
+        super(number, wavePreCountdown, autostart, EEventType);
         this.actionbar = actionbar;
         this.text = text;
     }

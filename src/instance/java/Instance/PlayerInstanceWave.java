@@ -1,7 +1,7 @@
 package instance.java.Instance;
 
 import instance.java.Config.LanguageManager;
-import instance.java.Enum.EventType;
+import instance.java.Enum.EEventType;
 import instance.java.Instances;
 import instance.java.Struct.CreatureSpawnPoint;
 import instance.java.Struct.CreatureWaveEntity;
@@ -87,7 +87,7 @@ public class PlayerInstanceWave extends PlayerInstance
 
     public void startTaskEvent()
     {
-        EventType typ = ((TaskEvent)myConfig.getTasks().get(taskCount)).getEventType();
+        EEventType typ = ((TaskEvent)myConfig.getTasks().get(taskCount)).getEEventType();
         switch (typ)
         {
             case ChangePlayerSpawn:

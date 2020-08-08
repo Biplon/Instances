@@ -1,6 +1,6 @@
 package instance.java.Enum;
 
-public enum RepetitiveType
+public enum ERepetitiveType
 {
     SpawnCreature,
     SendMassage,

@@ -1,7 +1,7 @@
 package instance.java.Listener;
 
 import instance.java.Config.LanguageManager;
-import instance.java.ManageInstances.InstancesManager;
+import instance.java.Manager.InstancesManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

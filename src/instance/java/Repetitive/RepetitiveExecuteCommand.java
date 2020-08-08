@@ -1,6 +1,6 @@
 package instance.java.Repetitive;
 
-import instance.java.Enum.RepetitiveType;
+import instance.java.Enum.ERepetitiveType;
 
 public class RepetitiveExecuteCommand extends Repetitive
 {
@@ -18,7 +18,7 @@ public class RepetitiveExecuteCommand extends Repetitive
         return command;
     }
 
-    public RepetitiveExecuteCommand(RepetitiveType type, int timer, String command, boolean playerCommand)
+    public RepetitiveExecuteCommand(ERepetitiveType type, int timer, String command, boolean playerCommand)
     {
         super(type, timer);
         this.playerCommand = playerCommand;

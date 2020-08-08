@@ -2,7 +2,7 @@ package instance.java.Command;
 
 import instance.java.Config.LanguageManager;
 import instance.java.GUI.GUIManager;
-import instance.java.ManageInstances.InstancesManager;
+import instance.java.Manager.InstancesManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
