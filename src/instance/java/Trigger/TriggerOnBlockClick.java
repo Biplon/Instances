@@ -4,23 +4,22 @@ import instance.java.Effect.Effect;
 import instance.java.Enum.ETriggerType;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 
 public class TriggerOnBlockClick extends TriggerCoordinates
 {
     private final Material myBlock;
 
-    private final boolean rightClick;
+    private final Action clickaction;
 
     public Material getMyBlock()
     {
         return myBlock;
     }
 
-    public boolean isRightClick()
+    public Action getClickAction()
     {
-        return rightClick;
+        return clickaction;
     }
 
     public TriggerOnBlockClick(int id, Location[] location, Material myMaterial, boolean rightClick, Effect myEffect, boolean singleUse)
@@ -28,11 +27,13 @@ public class TriggerOnBlockClick extends TriggerCoordinates
         super(id, location,myEffect,singleUse);
         myTrigger = ETriggerType.OnBlockClick;
         this.myBlock = myMaterial;
-        this.rightClick = rightClick;
-    }
-
-    public boolean isTriggered()
-    {
-        return super.isTriggered();
+        if (rightClick)
+        {
+            this.clickaction = Action.RIGHT_CLICK_BLOCK;
+        }
+        else
+        {
+            this.clickaction = Action.LEFT_CLICK_BLOCK;
+        }
     }
 }

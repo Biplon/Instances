@@ -180,7 +180,6 @@ public class PlayerInstanceWave extends PlayerInstance
     public void clearEnemyList()
     {
         ArrayList<Entity> tmp = new ArrayList<>();
-        checkIsWaveClear();
         for (Entity e : enemylist)
         {
             if (!e.isDead())
@@ -189,6 +188,7 @@ public class PlayerInstanceWave extends PlayerInstance
             }
         }
         enemylist = tmp;
+        checkIsWaveClear();
     }
 
     public void checkIsWaveClear()

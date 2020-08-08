@@ -2,6 +2,8 @@ package instance.java.Trigger;
 
 import instance.java.Effect.Effect;
 import instance.java.Enum.ETriggerType;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 public abstract class Trigger
 {
@@ -40,9 +42,13 @@ public abstract class Trigger
         this.singleUse = singleUse;
     }
 
-    public boolean isTriggered()
+    public void runEffect(Location loc)
     {
-        return false;
+
     }
 
+    public void runEffect(Player[] p)
+    {
+
+    }
 }

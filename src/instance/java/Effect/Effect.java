@@ -1,14 +1,20 @@
 package instance.java.Effect;
 
+import instance.java.Enum.EEffectType;
+import instance.java.Group.Group;
+import org.bukkit.entity.Player;
+
 import javax.xml.stream.Location;
 
 public abstract class Effect
 {
     final int id;
 
-    final boolean havePos;
+    final boolean hasPos;
 
     final boolean allPlayer;
+
+    EEffectType myType;
 
     public int getId()
     {
@@ -20,25 +26,25 @@ public abstract class Effect
         return allPlayer;
     }
 
-    public boolean isHavePos()
+    public boolean isHasPos()
     {
-        return havePos;
+        return hasPos;
     }
 
-    public Effect(int id, boolean havePos, boolean allPlayer)
+    public Effect(int id, boolean hasPos, boolean allPlayer)
     {
         this.id = id;
-        this.havePos = havePos;
+        this.hasPos = hasPos;
         this.allPlayer = allPlayer;
     }
 
-    public void startEffect()
+    public void startEffect(Player[] p)
     {
-
+        //TODO implement startEffect player
     }
 
     public void startEffect(Location pos)
     {
-
+        //TODO implement startEffect loc
     }
 }

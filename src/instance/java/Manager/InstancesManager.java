@@ -5,6 +5,7 @@ import instance.java.Instances;
 import instance.java.Struct.PlayerInstanceConfig;
 import instance.java.Utility.Utility;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,6 +41,18 @@ public class InstancesManager
         {
             instances.add(new PlayerInstanceConfig(path));
         }
+    }
+
+    public boolean isPlayerInRunningInstance(Player p)
+    {
+        for (PlayerInstanceConfig pic: instances)
+        {
+            if (pic.isPlayerInRunningInstance(p))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<PlayerInstanceConfig> getInstances()
@@ -121,5 +134,16 @@ public class InstancesManager
 
         }
         return false;
+    }
+
+    public void checkTriggerPIE(PlayerInteractEvent event)
+    {
+        for (PlayerInstanceConfig pic: instances)
+        {
+            if (pic.checkTriggerPIE(event))
+            {
+                return;
+            }
+        }
     }
 }

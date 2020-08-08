@@ -57,6 +57,7 @@ public class Instances extends JavaPlugin
         pm.registerEvents(new OnPlayerQuit(), this);
         pm.registerEvents(new OnEntityGetDamage(), this);
         pm.registerEvents(new OnPlayerInteract(), this);
+        //TODO implement events for triggers
     }
 
     @Override

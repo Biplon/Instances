@@ -44,11 +44,13 @@ public class PlayerInstance
 
     final ArrayList<PlayerSpawnPoint> playerSpawnPoints = new ArrayList();
 
-    final ArrayList<ProtectedRegion> subRegion = new ArrayList<>();
+    ArrayList<ProtectedRegion> subRegion = new ArrayList<>();
 
     final ArrayList<Location> triggerLocation = new ArrayList<>();
 
     public ArrayList<Repetitive> repetitives = new ArrayList();
+
+    public ArrayList<Integer> triggerused = new ArrayList();
 
     private int[] repeitivesBukkitTask;
 
@@ -156,7 +158,7 @@ public class PlayerInstance
             {
                 region = cfg.getString("subregion." + count + ".name");
                 assert region != null;
-                subRegion.add(regions.getRegion(Objects.requireNonNull(cfg.getString(region))));
+                subRegion.add(regions.getRegion(region));
                 count++;
             }
             else
@@ -184,6 +186,20 @@ public class PlayerInstance
                 isnext = false;
             }
         }
+    }
+
+    public void setTriggerUsed(int id)
+    {
+        triggerused.add(id);
+    }
+    public boolean isTriggerUsed(int id)
+    {
+        return triggerused.contains(id);
+    }
+
+    private void clearUsedTrigger()
+    {
+        triggerused.clear();
     }
 
     public void prepareStart()
@@ -307,6 +323,7 @@ public class PlayerInstance
         inUse = false;
         groupLivesCurrent = myConfig.getGroupLives();
         activePlayerSpawn = playerSpawnPoints.get(0);
+        clearUsedTrigger();
         for (int value : repeitivesBukkitTask)
         {
             Bukkit.getScheduler().cancelTask(value);

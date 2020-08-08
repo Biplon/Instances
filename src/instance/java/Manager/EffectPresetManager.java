@@ -1,7 +1,9 @@
 package instance.java.Manager;
 
 import instance.java.Effect.Effect;
+import org.bukkit.entity.Player;
 
+import javax.xml.stream.Location;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,4 +37,5 @@ public class EffectPresetManager
     {
         return null;
     }
+
 }
