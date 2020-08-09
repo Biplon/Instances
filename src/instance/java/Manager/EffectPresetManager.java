@@ -1,9 +1,9 @@
 package instance.java.Manager;
 
 import instance.java.Effect.Effect;
-import org.bukkit.entity.Player;
+import instance.java.Instances;
 
-import javax.xml.stream.Location;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +30,13 @@ public class EffectPresetManager
 
     public void loadEffectPresets()
     {
+        File folder = new File(Instances.getInstance().getDataFolder() + "/presets");
+        if (!folder.exists())
+        {
+            folder.mkdir();
+        }
+        List<String> result = new ArrayList<>();
+
         //load stuff
     }
 

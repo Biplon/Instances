@@ -173,11 +173,11 @@ public class PlayerInstanceConfig
         }
         if (createInstances())
         {
-            Bukkit.getLogger().info("instance: " +instanceName + ": loaded!");
+            Bukkit.getLogger().info("instance: " + instanceName + ": loaded!");
         }
         else
         {
-            Bukkit.getLogger().info("instance: " +instanceName + ": can not load!");
+            Bukkit.getLogger().info("instance: " + instanceName + ": can not load!");
             return;
         }
         boolean isnext2;
@@ -409,17 +409,20 @@ public class PlayerInstanceConfig
 
     public boolean isPlayerInRunningInstance(Player p)
     {
-        for (PlayerInstance pi : instances)
+        if (instances != null)
         {
-            if (pi.isInUse())
+            for (PlayerInstance pi : instances)
             {
-                for (Player pl : pi.getMyGroup().getGroup())
+                if (pi.isInUse())
                 {
-                    if (pl != null)
+                    for (Player pl : pi.getMyGroup().getGroup())
                     {
-                        if (pl.getUniqueId() == p.getUniqueId())
+                        if (pl != null)
                         {
-                            return true;
+                            if (pl.getUniqueId() == p.getUniqueId())
+                            {
+                                return true;
+                            }
                         }
                     }
                 }

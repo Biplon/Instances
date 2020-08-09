@@ -32,11 +32,11 @@ import java.util.*;
 
 public class PlayerInstance
 {
-    final PlayerInstanceConfig myConfig;
+    PlayerInstanceConfig myConfig;
 
-    final World myWorld;
+    World myWorld;
 
-    private final int id;
+    private int id;
 
     private ProtectedRegion myRegion;
 
@@ -56,7 +56,7 @@ public class PlayerInstance
 
     PlayerSpawnPoint activePlayerSpawn;
 
-    final Group myGroup;
+    Group myGroup;
 
     public ArrayList<Location> getTriggerLocation()
     {
@@ -104,6 +104,8 @@ public class PlayerInstance
 
     public PlayerInstance(PlayerInstanceConfig config, int id, String path)
     {
+        try
+        {
         File f = new File(path);
         FileConfiguration cfg = YamlConfiguration.loadConfiguration(f);
         this.id = id;
@@ -185,6 +187,11 @@ public class PlayerInstance
             {
                 isnext = false;
             }
+        }
+        }
+        catch (Exception e)
+        {
+            Bukkit.getLogger().warning(e.getMessage());
         }
     }
 
