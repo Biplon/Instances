@@ -1,5 +1,6 @@
 package instance.java.Instance;
 
+import com.mysql.jdbc.Util;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
@@ -19,6 +20,7 @@ import instance.java.Struct.PlayerSpawnPoint;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import instance.java.Utility.Utility;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -283,11 +285,11 @@ public class PlayerInstance
             case SendMassage:
                 if (((RepetitiveSendMassage) repetitive).isActionbar())
                 {
-                    sendActionbarMessage(((RepetitiveSendMassage) repetitive).getText());
+                   Utility.sendActionbarMessage(((RepetitiveSendMassage) repetitive).getText(),myGroup);
                 }
                 else
                 {
-                    sendMessage(((RepetitiveSendMassage) repetitive).getText());
+                    Utility.sendMessage(((RepetitiveSendMassage) repetitive).getText(),myGroup);
                 }
                 return;
             case ExecuteCommand:
@@ -364,13 +366,12 @@ public class PlayerInstance
         }
         if (win)
         {
-            sendMessage(LanguageManager.getInstance().winText);
+            Utility.sendMessage(LanguageManager.getInstance().winText,myGroup);
         }
         else
         {
-            sendMessage(LanguageManager.getInstance().loseText);
+            Utility.sendMessage(LanguageManager.getInstance().loseText,myGroup);
         }
-        resetInstance();
     }
 
     public void teleportPlayerToInstance()
@@ -400,31 +401,5 @@ public class PlayerInstance
         p.teleport(loc);
     }
 
-    public void sendMessage(String msg)
-    {
-        for (Player p : myGroup.getGroup())
-        {
-            if (p != null)
-            {
-                p.sendMessage(msg);
-            }
-        }
-    }
 
-    public void sendActionbarMessage(String msg)
-    {
-        for (Player p : myGroup.getGroup())
-        {
-            if (p != null)
-            {
-                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg));
-            }
-        }
-    }
-
-    public void sendMessageWithClickEvent(String clickabletext, String command, boolean leader)
-    {
-        TextComponent message = new TextComponent(clickabletext);
-        message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
-    }
 }

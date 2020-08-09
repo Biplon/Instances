@@ -3,6 +3,10 @@ package instance.java.Group;
 import instance.java.Config.LanguageManager;
 import instance.java.GUI.GUIManager;
 import instance.java.Instance.PlayerInstance;
+import instance.java.Instance.PlayerInstanceKillSpecificCreature;
+import instance.java.Instance.PlayerInstanceReachObject;
+import instance.java.Instance.PlayerInstanceWave;
+import instance.java.Utility.Utility;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import pts.java.api.PlayerManagement;
@@ -52,13 +56,13 @@ public class Group
                     group[i] = p;
                     if (group.length > 1)
                     {
-                        myInstance.sendMessage(p.getDisplayName() +" "+ LanguageManager.getInstance().joinedGroupText);
-                        myInstance.sendMessage( LanguageManager.getInstance().groupText +" " + getFullSlots()+ "/" + getGroupSize());
-                        myInstance.sendMessage(LanguageManager.getInstance().playerNeedText.replace("%Slots%",getFreeGroupSlots()+""));
+                        Utility.sendMessage(p.getDisplayName() +" "+ LanguageManager.getInstance().joinedGroupText,this);
+                        Utility.sendMessage( LanguageManager.getInstance().groupText +" " + getFullSlots()+ "/" + getGroupSize(),this);
+                        Utility.sendMessage(LanguageManager.getInstance().playerNeedText.replace("%Slots%",getFreeGroupSlots()+""),this);
                     }
                     if (groupMinSizeReached())
                     {
-                        myInstance.sendMessageWithClickEvent(LanguageManager.getInstance().preStartText,"/istartreadycheck",true);
+                        Utility.sendMessageWithClickEvent(LanguageManager.getInstance().preStartText,"/istartreadycheck",this,true);
                     }
                     if (isFull())
                     {
@@ -102,16 +106,27 @@ public class Group
                 loc[i] = null;
                 if (group.length > 1)
                 {
-                    myInstance.sendMessage(p.getDisplayName() + " "+LanguageManager.getInstance().playerLeaveInstanceText);
+                    Utility.sendMessage(p.getDisplayName() + " "+LanguageManager.getInstance().playerLeaveInstanceText,this);
                     if (!myInstance.isInUse())
                     {
-                        myInstance.sendMessage( LanguageManager.getInstance().groupText +" " + getFullSlots()+ "/" + getGroupSize());
-                        myInstance.sendMessage(  LanguageManager.getInstance().playerNeedText.replace("%Slots%",getFreeGroupSlots()+""));
+                        Utility.sendMessage( LanguageManager.getInstance().groupText +" " + getFullSlots()+ "/" + getGroupSize(),this);
+                        Utility.sendMessage(  LanguageManager.getInstance().playerNeedText.replace("%Slots%",getFreeGroupSlots()+""),this);
                     }
                 }
                 if (getFreeGroupSlots() == getGroupSize())
                 {
-                    myInstance.resetInstance();
+                    if (myInstance instanceof PlayerInstanceWave)
+                    {
+                        myInstance.resetInstance();
+                    }
+                    else if (myInstance instanceof PlayerInstanceKillSpecificCreature)
+                    {
+                       myInstance.resetInstance();
+                    }
+                    else if (myInstance instanceof PlayerInstanceReachObject)
+                    {
+                        myInstance.resetInstance();
+                    }
                 }
                 return;
             }

@@ -10,6 +10,6 @@ public class OnEntityDeath implements Listener
     @EventHandler
     public void onDeath(final EntityDeathEvent event)
     {
-        InstancesManager.getInstance().CheckEntity();
+        InstancesManager.getInstance().CheckEntity(event.getEntity());
     }
 }

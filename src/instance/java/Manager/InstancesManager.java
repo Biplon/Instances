@@ -4,6 +4,7 @@ import instance.java.Instance.PlayerInstance;
 import instance.java.Instances;
 import instance.java.Struct.PlayerInstanceConfig;
 import instance.java.Utility.Utility;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -108,11 +109,11 @@ public class InstancesManager
         }
     }
 
-    public void CheckEntity()
+    public void CheckEntity(Entity e)
     {
         for (PlayerInstanceConfig in : instances)
         {
-            in.clearEnemyList();
+            in.clearEnemyList(e);
         }
     }
 

@@ -2,6 +2,7 @@ package instance.java.Struct;
 
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import instance.java.Enum.*;
+import instance.java.Instance.PlayerInstanceKillSpecificCreature;
 import instance.java.Instance.PlayerInstanceWave;
 import instance.java.Instances;
 import instance.java.Instance.PlayerInstance;
@@ -19,6 +20,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -373,6 +375,10 @@ public class PlayerInstanceConfig
                 {
                     instances[i] = new PlayerInstanceWave(this, i, result.get(i));
                 }
+                else if (instancesType == EInstancesType.KillSpecificCreature)
+                {
+                    instances[i] = new PlayerInstanceKillSpecificCreature(this, i, result.get(i));
+                }
 
             }
             return true;
@@ -467,13 +473,27 @@ public class PlayerInstanceConfig
         }
     }
 
-    public void clearEnemyList()
+    public void clearEnemyList(Entity e)
     {
         if (instancesType == EInstancesType.Waves)
         {
             for (PlayerInstance pi : instances)
             {
-                ((PlayerInstanceWave) pi).clearEnemyList();
+                if (pi.isInUse())
+                {
+                    ((PlayerInstanceWave) pi).clearEnemyList();
+                }
+            }
+        }
+        else if (instancesType == EInstancesType.KillSpecificCreature)
+        {
+            for (PlayerInstance pi : instances)
+            {
+                if (pi.isInUse())
+                {
+                    ((PlayerInstanceKillSpecificCreature) pi).checkKillCreature(e);
+                }
+
             }
         }
     }
