@@ -38,6 +38,10 @@ public class PlayerInstanceConfig
 
     private final int groupLives;
 
+    private String creatureName;
+
+    private int creatureToKill;
+
     private final boolean playerOwnInventory;
 
     private PlayerInstance[] instances = null;
@@ -113,6 +117,16 @@ public class PlayerInstanceConfig
     public int getGroupSize()
     {
         return groupSize;
+    }
+
+    public String getCreatureName()
+    {
+        return creatureName;
+    }
+
+    public int getCreatureToKill()
+    {
+        return creatureToKill;
     }
 
     public PlayerInstanceConfig(String path)
@@ -233,6 +247,11 @@ public class PlayerInstanceConfig
                     isnext = false;
                 }
             }
+        }
+        else if (instancesType == EInstancesType.KillSpecificCreature)
+        {
+            creatureName = cfg.getString("general.creaturename");
+            creatureToKill = cfg.getInt("general.creaturetokill");
         }
         isnext = true;
         count = 0;
