@@ -1,11 +1,15 @@
 package instance.java.Manager;
 
+import instance.java.Enum.EInstancesType;
+import instance.java.Enum.EReachObjectType;
 import instance.java.Instance.PlayerInstance;
 import instance.java.Instances;
 import instance.java.Struct.PlayerInstanceConfig;
 import instance.java.Utility.Utility;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.io.File;
@@ -144,6 +148,55 @@ public class InstancesManager
             if (pic.checkTriggerPIE(event))
             {
                 return;
+            }
+        }
+    }
+
+    public void checkReachObjectInstances(PlayerInteractEvent event)
+    {
+        EReachObjectType type = null;
+
+        if (event.getAction() == Action.PHYSICAL)
+        {
+            type = EReachObjectType.OnPressurePlateActivate;
+        }
+        else if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
+        {
+            if (event.getMaterial() == Material.LEVER)
+            {
+                type = EReachObjectType.OnLeverChange;
+            }
+            else
+            {
+                switch (event.getMaterial())
+                {
+                   case BIRCH_BUTTON:
+                   case ACACIA_BUTTON:
+                   case DARK_OAK_BUTTON:
+                   case JUNGLE_BUTTON:
+                   case OAK_BUTTON:
+                   case SPRUCE_BUTTON:
+                   case STONE_BUTTON:
+                       type = EReachObjectType.OnButtonClick;
+                        break;
+                }
+            }
+        }
+
+        if (type != null)
+        {
+            for (PlayerInstanceConfig pic: instances)
+            {
+                if (pic.getInstancesType() == EInstancesType.ReachObject)
+                {
+                    if (pic.getObjecttoreach() == type)
+                    {
+                        if (pic.checkReachObjectInstances(event))
+                        {
+                            return;
+                        }
+                    }
+                }
             }
         }
     }

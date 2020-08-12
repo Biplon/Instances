@@ -14,6 +14,7 @@ public class OnPlayerInteract implements Listener
         Player p = event.getPlayer();
         if (InstancesManager.getInstance().isPlayerInRunningInstance(p))
         {
+            InstancesManager.getInstance().checkReachObjectInstances(event);
             InstancesManager.getInstance().checkTriggerPIE(event);
         }
     }

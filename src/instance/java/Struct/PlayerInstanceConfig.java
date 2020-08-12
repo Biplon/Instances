@@ -3,6 +3,7 @@ package instance.java.Struct;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import instance.java.Enum.*;
 import instance.java.Instance.PlayerInstanceKillSpecificCreature;
+import instance.java.Instance.PlayerInstanceReachObject;
 import instance.java.Instance.PlayerInstanceWave;
 import instance.java.Instances;
 import instance.java.Instance.PlayerInstance;
@@ -51,6 +52,8 @@ public class PlayerInstanceConfig
     private final int groupMinSize;
 
     private final EInstancesType instancesType;
+
+    private EReachObjectType objecttoreach;
 
     private final ArrayList<String> instancesStartCommands = new ArrayList();
 
@@ -127,6 +130,11 @@ public class PlayerInstanceConfig
     public int getCreatureToKill()
     {
         return creatureToKill;
+    }
+
+    public EReachObjectType getObjecttoreach()
+    {
+        return objecttoreach;
     }
 
     public PlayerInstanceConfig(String path)
@@ -252,6 +260,10 @@ public class PlayerInstanceConfig
         {
             creatureName = cfg.getString("general.creaturename");
             creatureToKill = cfg.getInt("general.creaturetokill");
+        }
+        else if (instancesType == EInstancesType.ReachObject)
+        {
+            objecttoreach = EReachObjectType.valueOf(cfg.getString("general.objecttoreach"));
         }
         isnext = true;
         count = 0;
@@ -661,6 +673,23 @@ public class PlayerInstanceConfig
                     }
                 }
 
+            }
+        }
+        return false;
+    }
+
+    public boolean checkReachObjectInstances(PlayerInteractEvent event)
+    {
+        Location loc = event.getClickedBlock().getLocation();
+        for (PlayerInstance pi : instances)
+        {
+            if (pi.isInUse())
+            {
+                if (((PlayerInstanceReachObject) pi).getReachObjectLocation() == loc)
+                {
+                    pi.endInstance(true);
+                    return true;
+                }
             }
         }
         return false;

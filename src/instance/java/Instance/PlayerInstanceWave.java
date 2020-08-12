@@ -74,7 +74,6 @@ public class PlayerInstanceWave extends PlayerInstance
         killEnemyList();
         taskCount = 0;
         isTaskActive = false;
-        myGroup.clearGroup();
     }
 
     private void killEnemyList()

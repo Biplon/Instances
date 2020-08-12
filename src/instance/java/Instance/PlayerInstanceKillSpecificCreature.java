@@ -26,7 +26,6 @@ public class PlayerInstanceKillSpecificCreature extends PlayerInstance
     {
         super.resetInstance();
         creatureKilled = 0;
-        myGroup.clearGroup();
     }
 
     public void checkKillCreature(Entity e)

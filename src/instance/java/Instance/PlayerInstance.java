@@ -337,6 +337,7 @@ public class PlayerInstance
         {
             Bukkit.getScheduler().cancelTask(value);
         }
+        myGroup.clearGroup();
     }
 
     public void endInstance(boolean win)
