@@ -1,6 +1,5 @@
 package instance.java.Instance;
 
-import com.mysql.jdbc.Util;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
@@ -17,9 +16,6 @@ import instance.java.Repetitive.RepetitiveSpawnCreature;
 import instance.java.Struct.CreatureSpawnPoint;
 import instance.java.Struct.PlayerInstanceConfig;
 import instance.java.Struct.PlayerSpawnPoint;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import instance.java.Utility.Utility;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.bukkit.Bukkit;
@@ -108,88 +104,88 @@ public class PlayerInstance
     {
         try
         {
-        File f = new File(path);
-        FileConfiguration cfg = YamlConfiguration.loadConfiguration(f);
-        this.id = id;
-        myConfig = config;
-        myGroup = new Group(this, config.getGroupMinSize(), config.getGroupSize());
-        myWorld = Bukkit.getWorld(Objects.requireNonNull(cfg.getString("general.worldname")));
-        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
-        assert myWorld != null;
-        RegionManager regions = container.get(BukkitAdapter.adapt(myWorld));
-        assert regions != null;
-        myRegion = regions.getRegion(Objects.requireNonNull(cfg.getString("general.regionname")));
-        boolean isnext = true;
-        int count = 0;
-        String[] coords;
-        while (isnext)
-        {
-            if (cfg.getString("creatureSpawnPoints." + count + ".coords") != null)
+            File f = new File(path);
+            FileConfiguration cfg = YamlConfiguration.loadConfiguration(f);
+            this.id = id;
+            myConfig = config;
+            myGroup = new Group(this, config.getGroupMinSize(), config.getGroupSize());
+            myWorld = Bukkit.getWorld(Objects.requireNonNull(cfg.getString("general.worldname")));
+            RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+            assert myWorld != null;
+            RegionManager regions = container.get(BukkitAdapter.adapt(myWorld));
+            assert regions != null;
+            myRegion = regions.getRegion(Objects.requireNonNull(cfg.getString("general.regionname")));
+            boolean isnext = true;
+            int count = 0;
+            String[] coords;
+            while (isnext)
             {
-                coords = cfg.getString("creatureSpawnPoints." + count + ".coords").split(",");
-                creatureSpawnPoints.add(new CreatureSpawnPoint(count, myWorld, Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2])));
-                count++;
+                if (cfg.getString("creatureSpawnPoints." + count + ".coords") != null)
+                {
+                    coords = cfg.getString("creatureSpawnPoints." + count + ".coords").split(",");
+                    creatureSpawnPoints.add(new CreatureSpawnPoint(count, myWorld, Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2])));
+                    count++;
+                }
+                else
+                {
+                    isnext = false;
+                }
             }
-            else
-            {
-                isnext = false;
-            }
-        }
 
-        isnext = true;
-        count = 0;
-        while (isnext)
-        {
-            if (cfg.getString("playerSpawnpoints." + count + ".coords") != null)
+            isnext = true;
+            count = 0;
+            while (isnext)
             {
-                coords = cfg.getString("playerSpawnpoints." + count + ".coords").split(",");
+                if (cfg.getString("playerSpawnpoints." + count + ".coords") != null)
+                {
+                    coords = cfg.getString("playerSpawnpoints." + count + ".coords").split(",");
 
-                playerSpawnPoints.add(new PlayerSpawnPoint(count, myWorld, Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2])));
-                count++;
+                    playerSpawnPoints.add(new PlayerSpawnPoint(count, myWorld, Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2])));
+                    count++;
+                }
+                else
+                {
+                    isnext = false;
+                }
             }
-            else
+            activePlayerSpawn = playerSpawnPoints.get(0);
+            isnext = true;
+            count = 0;
+            String region;
+            while (isnext)
             {
-                isnext = false;
+                if (cfg.getString("subregion." + count + ".name") != null)
+                {
+                    region = cfg.getString("subregion." + count + ".name");
+                    assert region != null;
+                    subRegion.add(regions.getRegion(region));
+                    count++;
+                }
+                else
+                {
+                    isnext = false;
+                }
             }
-        }
-        activePlayerSpawn = playerSpawnPoints.get(0);
-        isnext = true;
-        count = 0;
-        String region;
-        while (isnext)
-        {
-            if (cfg.getString("subregion." + count + ".name") != null)
-            {
-                region = cfg.getString("subregion." + count + ".name");
-                assert region != null;
-                subRegion.add(regions.getRegion(region));
-                count++;
-            }
-            else
-            {
-                isnext = false;
-            }
-        }
 
-        isnext = true;
-        count = 0;
-        String[] tcoords;
-        while (isnext)
-        {
-            if (cfg.getString("triggerpos." + count + ".coords") != null)
+            isnext = true;
+            count = 0;
+            String[] tcoords;
+            while (isnext)
             {
-                tcoords = cfg.getString("triggerpos." + count + ".coords").split(",");
-                int x = Integer.parseInt(tcoords[0]);
-                int y = Integer.parseInt(tcoords[1]);
-                int z = Integer.parseInt(tcoords[2]);
-                triggerLocation.add(new Location(myWorld,x,y,z));
-                count++;
+                if (cfg.getString("triggerpos." + count + ".coords") != null)
+                {
+                    tcoords = cfg.getString("triggerpos." + count + ".coords").split(",");
+                    int x = Integer.parseInt(tcoords[0]);
+                    int y = Integer.parseInt(tcoords[1]);
+                    int z = Integer.parseInt(tcoords[2]);
+                    triggerLocation.add(new Location(myWorld, x, y, z));
+                    count++;
+                }
+                else
+                {
+                    isnext = false;
+                }
             }
-            else
-            {
-                isnext = false;
-            }
-        }
         }
         catch (Exception e)
         {
@@ -201,6 +197,7 @@ public class PlayerInstance
     {
         triggerused.add(id);
     }
+
     public boolean isTriggerUsed(int id)
     {
         return triggerused.contains(id);
@@ -232,14 +229,7 @@ public class PlayerInstance
             for (int i = 0; i < repeitivesBukkitTask.length; i++)
             {
                 int finalI = i;
-                repeitivesBukkitTask[i] = Bukkit.getScheduler().scheduleSyncRepeatingTask(Instances.getInstance(), new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        executeRepetitive(finalI);
-                    }
-                }, (long) repetitives.get(i).getTimer() * 20, (long) repetitives.get(i).getTimer() * 20);
+                repeitivesBukkitTask[i] = Bukkit.getScheduler().scheduleSyncRepeatingTask(Instances.getInstance(), () -> executeRepetitive(finalI), (long) repetitives.get(i).getTimer() * 20, (long) repetitives.get(i).getTimer() * 20);
             }
         }
     }
@@ -262,7 +252,7 @@ public class PlayerInstance
         switch (repetitive.getType())
         {
             case SpawnCreature:
-                Map<String, String> data = new HashMap<String, String>();
+                Map<String, String> data = new HashMap<>();
                 CreatureSpawnPoint sp = null;
                 for (CreatureSpawnPoint csp : creatureSpawnPoints)
                 {
@@ -272,24 +262,27 @@ public class PlayerInstance
                         break;
                     }
                 }
-                data.put("type", ((RepetitiveSpawnCreature) repetitive).getCreature());
-                data.put("number", "" + ((RepetitiveSpawnCreature) repetitive).getAmount());
-                data.put("x", "" + sp.loc.getBlockX());
-                data.put("y", "" + sp.loc.getBlockY());
-                data.put("z", "" + sp.loc.getBlockZ());
-                data.put("world", myWorld.getName());
-                String formattedString = StrSubstitutor.replace("mo lspawn ${type} ${number} ${x} ${y} ${z} ${world}", data);
-                Bukkit.getScheduler().callSyncMethod(Instances.getInstance(), () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), formattedString));
-                data.clear();
+                if (sp != null)
+                {
+                    data.put("type", ((RepetitiveSpawnCreature) repetitive).getCreature());
+                    data.put("number", "" + ((RepetitiveSpawnCreature) repetitive).getAmount());
+                    data.put("x", "" + sp.loc.getBlockX());
+                    data.put("y", "" + sp.loc.getBlockY());
+                    data.put("z", "" + sp.loc.getBlockZ());
+                    data.put("world", myWorld.getName());
+                    String formattedString = StrSubstitutor.replace("mo lspawn ${type} ${number} ${x} ${y} ${z} ${world}", data);
+                    Bukkit.getScheduler().callSyncMethod(Instances.getInstance(), () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), formattedString));
+                    data.clear();
+                }
                 return;
             case SendMassage:
                 if (((RepetitiveSendMassage) repetitive).isActionbar())
                 {
-                   Utility.sendActionbarMessage(((RepetitiveSendMassage) repetitive).getText(),myGroup);
+                    Utility.sendActionbarMessage(((RepetitiveSendMassage) repetitive).getText(), myGroup);
                 }
                 else
                 {
-                    Utility.sendMessage(((RepetitiveSendMassage) repetitive).getText(),myGroup);
+                    Utility.sendMessage(((RepetitiveSendMassage) repetitive).getText(), myGroup);
                 }
                 return;
             case ExecuteCommand:
@@ -367,11 +360,11 @@ public class PlayerInstance
         }
         if (win)
         {
-            Utility.sendMessage(LanguageManager.getInstance().winText,myGroup);
+            Utility.sendMessage(LanguageManager.winText, myGroup);
         }
         else
         {
-            Utility.sendMessage(LanguageManager.getInstance().loseText,myGroup);
+            Utility.sendMessage(LanguageManager.loseText, myGroup);
         }
     }
 
@@ -401,6 +394,4 @@ public class PlayerInstance
     {
         p.teleport(loc);
     }
-
-
 }

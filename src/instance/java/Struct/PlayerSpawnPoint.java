@@ -12,7 +12,7 @@ public class PlayerSpawnPoint
     public PlayerSpawnPoint(int id, World world, int posx, int posy, int posz)
     {
         this.id = id;
-        loc = new Location(world,posx,posy,posz);
+        loc = new Location(world, posx, posy, posz);
     }
 
     @Override

@@ -46,7 +46,7 @@ public class PlayerInstanceWave extends PlayerInstance
             {
                 if (((TaskCreatureWave) myConfig.getTasks().get(taskCount)).autostart)
                 {
-                    Utility.sendActionbarMessage(LanguageManager.getInstance().waveStartTimeText.replace("%time%", ((TaskCreatureWave) myConfig.getTasks().get(taskCount)).preCountdown + ""),myGroup);
+                    Utility.sendActionbarMessage(LanguageManager.waveStartTimeText.replace("%time%", ((TaskCreatureWave) myConfig.getTasks().get(taskCount)).preCountdown + ""), myGroup);
                     Bukkit.getScheduler().runTaskLaterAsynchronously(Instances.getInstance(), this::startTaskCreatureWave, (long) (((TaskCreatureWave) myConfig.getTasks().get(taskCount)).preCountdown * 20));
                 }
             }
@@ -87,25 +87,25 @@ public class PlayerInstanceWave extends PlayerInstance
 
     public void startTaskEvent()
     {
-        EEventType typ = ((TaskEvent)myConfig.getTasks().get(taskCount)).getEEventType();
+        EEventType typ = ((TaskEvent) myConfig.getTasks().get(taskCount)).getEEventType();
         switch (typ)
         {
             case ChangePlayerSpawn:
-                activePlayerSpawn = playerSpawnPoints.get(((TaskEventChangePlayerSpawn)myConfig.getTasks().get(taskCount)).getSpawnPointId());
+                activePlayerSpawn = playerSpawnPoints.get(((TaskEventChangePlayerSpawn) myConfig.getTasks().get(taskCount)).getSpawnPointId());
                 break;
             case SendMessage:
-                if (((TaskEventSendMessage)myConfig.getTasks().get(taskCount)).isActionbar())
+                if (((TaskEventSendMessage) myConfig.getTasks().get(taskCount)).isActionbar())
                 {
-                    Utility.sendActionbarMessage((((TaskEventSendMessage)myConfig.getTasks().get(taskCount)).getText()),myGroup);
+                    Utility.sendActionbarMessage((((TaskEventSendMessage) myConfig.getTasks().get(taskCount)).getText()), myGroup);
                 }
                 else
                 {
-                    Utility.sendMessage(((TaskEventSendMessage)myConfig.getTasks().get(taskCount)).getText(),myGroup);
+                    Utility.sendMessage(((TaskEventSendMessage) myConfig.getTasks().get(taskCount)).getText(), myGroup);
                 }
                 break;
             case ExecuteCommand:
-                String command = ((TaskEventExecuteCommand)myConfig.getTasks().get(taskCount)).getCommand();
-                if (((TaskEventExecuteCommand)myConfig.getTasks().get(taskCount)).isPlayerCommand())
+                String command = ((TaskEventExecuteCommand) myConfig.getTasks().get(taskCount)).getCommand();
+                if (((TaskEventExecuteCommand) myConfig.getTasks().get(taskCount)).isPlayerCommand())
                 {
                     for (Player p : myGroup.getGroup())
                     {
@@ -137,13 +137,13 @@ public class PlayerInstanceWave extends PlayerInstance
                 {
                     for (CreatureSpawnPoint csp : creatureSpawnPoints)
                     {
-                        if (csp.id == wm.creaturespawnpointid)
+                        if (csp.id == wm.creatureSpawnPointId)
                         {
                             sp = csp;
                             break;
                         }
                     }
-                    data.put("type", wm.mobname);
+                    data.put("type", wm.mobName);
                     data.put("number", "" + wm.amount);
                     data.put("x", "" + sp.loc.getBlockX());
                     data.put("y", "" + sp.loc.getBlockY());
@@ -156,7 +156,7 @@ public class PlayerInstanceWave extends PlayerInstance
                 taskCount++;
                 Bukkit.getScheduler().callSyncMethod(Instances.getInstance(), this::getEnemys);
                 isTaskActive = true;
-                Utility.sendActionbarMessage(LanguageManager.getInstance().waveStartedText,myGroup);
+                Utility.sendActionbarMessage(LanguageManager.waveStartedText, myGroup);
             }
         }
     }
@@ -196,7 +196,7 @@ public class PlayerInstanceWave extends PlayerInstance
         if (enemylist.size() == 0 && isTaskActive)
         {
             isTaskActive = false;
-            Utility.sendActionbarMessage(LanguageManager.getInstance().waveClearedText,myGroup);
+            Utility.sendActionbarMessage(LanguageManager.waveClearedText, myGroup);
             if (taskCount >= myConfig.getTasks().size())
             {
                 endInstance(true);
@@ -208,6 +208,4 @@ public class PlayerInstanceWave extends PlayerInstance
             }
         }
     }
-
-
 }

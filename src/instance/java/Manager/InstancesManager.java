@@ -16,7 +16,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class InstancesManager
 {
     private static InstancesManager instance;
@@ -36,10 +35,6 @@ public class InstancesManager
     public void loadInstances()
     {
         File folder = new File(Instances.getInstance().getDataFolder() + "/instances");
-        if (!folder.exists())
-        {
-            folder.mkdir();
-        }
         List<String> result = new ArrayList<>();
         Utility.search(".*\\.yml", folder, result);
         for (String path : result)
@@ -50,7 +45,7 @@ public class InstancesManager
 
     public boolean isPlayerInRunningInstance(Player p)
     {
-        for (PlayerInstanceConfig pic: instances)
+        for (PlayerInstanceConfig pic : instances)
         {
             if (pic.isPlayerInRunningInstance(p))
             {
@@ -143,7 +138,7 @@ public class InstancesManager
 
     public void checkTriggerPIE(PlayerInteractEvent event)
     {
-        for (PlayerInstanceConfig pic: instances)
+        for (PlayerInstanceConfig pic : instances)
         {
             if (pic.checkTriggerPIE(event))
             {
@@ -170,14 +165,14 @@ public class InstancesManager
             {
                 switch (event.getMaterial())
                 {
-                   case BIRCH_BUTTON:
-                   case ACACIA_BUTTON:
-                   case DARK_OAK_BUTTON:
-                   case JUNGLE_BUTTON:
-                   case OAK_BUTTON:
-                   case SPRUCE_BUTTON:
-                   case STONE_BUTTON:
-                       type = EReachObjectType.OnButtonClick;
+                    case BIRCH_BUTTON:
+                    case ACACIA_BUTTON:
+                    case DARK_OAK_BUTTON:
+                    case JUNGLE_BUTTON:
+                    case OAK_BUTTON:
+                    case SPRUCE_BUTTON:
+                    case STONE_BUTTON:
+                        type = EReachObjectType.OnButtonClick;
                         break;
                 }
             }
@@ -185,7 +180,7 @@ public class InstancesManager
 
         if (type != null)
         {
-            for (PlayerInstanceConfig pic: instances)
+            for (PlayerInstanceConfig pic : instances)
             {
                 if (pic.getInstancesType() == EInstancesType.ReachObject)
                 {

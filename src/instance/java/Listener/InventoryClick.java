@@ -50,7 +50,7 @@ public class InventoryClick implements Listener
                 }
                 else
                 {
-                    p.sendMessage(LanguageManager.getInstance().groupFullText + " " + name);
+                    p.sendMessage(LanguageManager.groupFullText + " " + name);
                     e.setCancelled(true);
                 }
             }
@@ -60,22 +60,22 @@ public class InventoryClick implements Listener
             name = Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName();
         }
 
-        if (name.equalsIgnoreCase(LanguageManager.getInstance().readyText))
+        if (name.equalsIgnoreCase(LanguageManager.readyText))
         {
             InstancesManager.getInstance().setPlayerReady(p);
             p.closeInventory();
         }
-        else if (name.equalsIgnoreCase(LanguageManager.getInstance().notReadyText))
+        else if (name.equalsIgnoreCase(LanguageManager.notReadyText))
         {
-            p.sendMessage(LanguageManager.getInstance().ifReadyText + " /iready");
+            p.sendMessage(LanguageManager.ifReadyText + " /iready");
             p.closeInventory();
         }
-        else if (name.equalsIgnoreCase(LanguageManager.getInstance().yesLeaveText))
+        else if (name.equalsIgnoreCase(LanguageManager.yesLeaveText))
         {
             InstancesManager.getInstance().leavePlayer(p, false);
             p.closeInventory();
         }
-        else if (name.equalsIgnoreCase(LanguageManager.getInstance().noLeaveText))
+        else if (name.equalsIgnoreCase(LanguageManager.noLeaveText))
         {
             p.closeInventory();
         }

@@ -7,7 +7,7 @@ import org.bukkit.Location;
 public class TriggerOnButtonClick extends TriggerCoordinates
 {
 
-    public TriggerOnButtonClick(int id, Location[] location, Effect myEffect, boolean singleUse)
+    public TriggerOnButtonClick(int id, Location location, Effect myEffect, boolean singleUse)
     {
         super(id, location,myEffect,singleUse);
         myTrigger = ETriggerType.OnButtonClick;

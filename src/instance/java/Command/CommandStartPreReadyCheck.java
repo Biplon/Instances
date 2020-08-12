@@ -21,7 +21,7 @@ public class CommandStartPreReadyCheck implements CommandExecutor
             }
             else
             {
-                if (InstancesManager.getInstance().getInstanceOfPlayer(player) !=null)
+                if (InstancesManager.getInstance().getInstanceOfPlayer(player) != null)
                 {
                     if (InstancesManager.getInstance().getInstanceOfPlayer(player).getMyGroup().groupMinSizeReached())
                     {
@@ -29,7 +29,7 @@ public class CommandStartPreReadyCheck implements CommandExecutor
                     }
                     else
                     {
-                        player.sendMessage(LanguageManager.getInstance().canNotStartReadyCheckText);
+                        player.sendMessage(LanguageManager.canNotStartReadyCheckText);
                     }
                     return true;
                 }

@@ -9,10 +9,10 @@ public class CreatureSpawnPoint
 
     public final Location loc;
 
-    public CreatureSpawnPoint(int id, World world, int posx, int posy, int posz)
+    public CreatureSpawnPoint(int id, World world, int posX, int posY, int posZ)
     {
         this.id = id;
-        loc = new Location(world, posx, posy, posz);
+        loc = new Location(world, posX, posY, posZ);
     }
 
     @Override

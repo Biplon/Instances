@@ -13,7 +13,7 @@ public class TriggerOnChat extends TriggerRegion
         return text;
     }
 
-    public TriggerOnChat(int id, ProtectedRegion[] region, String text, Effect myEffect, boolean singleUse)
+    public TriggerOnChat(int id, ProtectedRegion region, String text, Effect myEffect, boolean singleUse)
     {
         super(id, region,myEffect,singleUse);
         this.text = text;

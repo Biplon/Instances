@@ -31,7 +31,7 @@ public class CommandJoinInstance implements CommandExecutor
                     }
                     else
                     {
-                        player.sendMessage(LanguageManager.getInstance().canNotJoinText);
+                        player.sendMessage(LanguageManager.canNotJoinText);
                     }
                     return true;
                 }
@@ -51,7 +51,7 @@ public class CommandJoinInstance implements CommandExecutor
                 }
                 else
                 {
-                    commandSender.sendMessage(LanguageManager.getInstance().canNotJoinTextConsoleText);
+                    commandSender.sendMessage(LanguageManager.canNotJoinTextConsoleText);
                 }
                 return true;
             }

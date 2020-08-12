@@ -9,6 +9,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Objects;
+
 public class CommandLeaveInstance implements CommandExecutor
 {
     @Override
@@ -31,7 +33,7 @@ public class CommandLeaveInstance implements CommandExecutor
                     }
                     else
                     {
-                        commandSender.sendMessage(LanguageManager.getInstance().notInInstanceText);
+                        commandSender.sendMessage(LanguageManager.notInInstanceText);
                     }
                     return true;
                 }
@@ -47,11 +49,11 @@ public class CommandLeaveInstance implements CommandExecutor
             {
                 if (InstancesManager.getInstance().getInstanceOfPlayer(Bukkit.getPlayer(args[0])) != null)
                 {
-                    GUIManager.getInstance().openLeaveInstanceGUI(Bukkit.getPlayer(args[0]));
+                    GUIManager.getInstance().openLeaveInstanceGUI(Objects.requireNonNull(Bukkit.getPlayer(args[0])));
                 }
                 else
                 {
-                    commandSender.sendMessage(LanguageManager.getInstance().notInInstanceConsoleText);
+                    commandSender.sendMessage(LanguageManager.notInInstanceConsoleText);
                 }
                 return true;
             }

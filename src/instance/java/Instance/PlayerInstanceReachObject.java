@@ -1,6 +1,5 @@
 package instance.java.Instance;
 
-import com.mojang.authlib.BaseUserAuthentication;
 import instance.java.Struct.PlayerInstanceConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -33,7 +32,6 @@ public class PlayerInstanceReachObject extends PlayerInstance
             Bukkit.getLogger().warning(e.getMessage());
         }
     }
-
 
     @Override
     public void resetInstance()

@@ -18,9 +18,4 @@ public class TaskEvent extends Task
         this.autostart = autostart;
         this.EEventType = EEventType;
     }
-
-    public void executeEvent()
-    {
-
-    }
 }

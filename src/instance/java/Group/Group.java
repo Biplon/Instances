@@ -56,13 +56,13 @@ public class Group
                     group[i] = p;
                     if (group.length > 1)
                     {
-                        Utility.sendMessage(p.getDisplayName() +" "+ LanguageManager.getInstance().joinedGroupText,this);
-                        Utility.sendMessage( LanguageManager.getInstance().groupText +" " + getFullSlots()+ "/" + getGroupSize(),this);
-                        Utility.sendMessage(LanguageManager.getInstance().playerNeedText.replace("%Slots%",getFreeGroupSlots()+""),this);
+                        Utility.sendMessage(p.getDisplayName() + " " + LanguageManager.joinedGroupText, this);
+                        Utility.sendMessage(LanguageManager.groupText + " " + getFullSlots() + "/" + getGroupSize(), this);
+                        Utility.sendMessage(LanguageManager.playerNeedText.replace("%Slots%", getFreeGroupSlots() + ""), this);
                     }
                     if (groupMinSizeReached())
                     {
-                        Utility.sendMessageWithClickEvent(LanguageManager.getInstance().preStartText,"/istartreadycheck",this,true);
+                        Utility.sendMessageWithClickEvent(LanguageManager.preStartText, "/istartreadycheck", this, true);
                     }
                     if (isFull())
                     {
@@ -90,7 +90,7 @@ public class Group
             {
                 if (myInstance.isInUse())
                 {
-                    myInstance.teleportPlayerBack(p,loc[i]);
+                    myInstance.teleportPlayerBack(p, loc[i]);
                     if (!myInstance.getMyConfig().getPlayerOwnInventory())
                     {
                         if (!disconnect)
@@ -106,11 +106,11 @@ public class Group
                 loc[i] = null;
                 if (group.length > 1)
                 {
-                    Utility.sendMessage(p.getDisplayName() + " "+LanguageManager.getInstance().playerLeaveInstanceText,this);
+                    Utility.sendMessage(p.getDisplayName() + " " + LanguageManager.playerLeaveInstanceText, this);
                     if (!myInstance.isInUse())
                     {
-                        Utility.sendMessage( LanguageManager.getInstance().groupText +" " + getFullSlots()+ "/" + getGroupSize(),this);
-                        Utility.sendMessage(  LanguageManager.getInstance().playerNeedText.replace("%Slots%",getFreeGroupSlots()+""),this);
+                        Utility.sendMessage(LanguageManager.groupText + " " + getFullSlots() + "/" + getGroupSize(), this);
+                        Utility.sendMessage(LanguageManager.playerNeedText.replace("%Slots%", getFreeGroupSlots() + ""), this);
                     }
                 }
                 if (getFreeGroupSlots() == getGroupSize())
@@ -121,7 +121,7 @@ public class Group
                     }
                     else if (myInstance instanceof PlayerInstanceKillSpecificCreature)
                     {
-                       myInstance.resetInstance();
+                        myInstance.resetInstance();
                     }
                     else if (myInstance instanceof PlayerInstanceReachObject)
                     {
@@ -135,7 +135,7 @@ public class Group
 
     public void readyCheck()
     {
-        for (Player p: group)
+        for (Player p : group)
         {
             GUIManager.getInstance().openReadyCheckGUI(p);
         }
@@ -205,7 +205,7 @@ public class Group
     {
         Arrays.fill(group, null);
         Arrays.fill(ready, false);
-        Arrays.fill(loc,null);
+        Arrays.fill(loc, null);
     }
 
     public boolean isFull()

@@ -13,9 +13,9 @@ public class TriggerOnLeverChange extends TriggerCoordinates
         return powered;
     }
 
-    public TriggerOnLeverChange(int id, Location[] location, boolean powered, Effect myEffect, boolean singleUse)
+    public TriggerOnLeverChange(int id, Location location, boolean powered, Effect myEffect, boolean singleUse)
     {
-        super(id, location,myEffect,singleUse);
+        super(id, location, myEffect, singleUse);
         this.powered = powered;
         myTrigger = ETriggerType.OnLeverChange;
     }

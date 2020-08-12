@@ -44,11 +44,11 @@ public abstract class Trigger
 
     public void runEffect(Location loc)
     {
-
+        //TODO implement
     }
 
     public void runEffect(Player[] p)
     {
-
+        //TODO implement
     }
 }

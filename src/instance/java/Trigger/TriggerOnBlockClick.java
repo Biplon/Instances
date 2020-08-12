@@ -10,7 +10,7 @@ public class TriggerOnBlockClick extends TriggerCoordinates
 {
     private final Material myBlock;
 
-    private final Action clickaction;
+    private final Action clickAction;
 
     public Material getMyBlock()
     {
@@ -19,21 +19,21 @@ public class TriggerOnBlockClick extends TriggerCoordinates
 
     public Action getClickAction()
     {
-        return clickaction;
+        return clickAction;
     }
 
-    public TriggerOnBlockClick(int id, Location[] location, Material myMaterial, boolean rightClick, Effect myEffect, boolean singleUse)
+    public TriggerOnBlockClick(int id, Location location, Material myMaterial, boolean rightClick, Effect myEffect, boolean singleUse)
     {
         super(id, location,myEffect,singleUse);
         myTrigger = ETriggerType.OnBlockClick;
         this.myBlock = myMaterial;
         if (rightClick)
         {
-            this.clickaction = Action.RIGHT_CLICK_BLOCK;
+            this.clickAction = Action.RIGHT_CLICK_BLOCK;
         }
         else
         {
-            this.clickaction = Action.LEFT_CLICK_BLOCK;
+            this.clickAction = Action.LEFT_CLICK_BLOCK;
         }
     }
 }

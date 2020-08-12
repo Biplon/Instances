@@ -1,7 +1,6 @@
 package instance.java.Effect;
 
 import instance.java.Enum.EEffectType;
-import instance.java.Group.Group;
 import org.bukkit.entity.Player;
 
 import javax.xml.stream.Location;

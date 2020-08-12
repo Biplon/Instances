@@ -2,6 +2,7 @@ package instance.java;
 
 import instance.java.Command.CommandJoinInstance;
 import instance.java.Command.CommandLeaveInstance;
+import instance.java.Command.CommandPlayerReady;
 import instance.java.Command.CommandStartPreReadyCheck;
 import instance.java.Config.ConfigManager;
 import instance.java.Config.LanguageManager;
@@ -10,12 +11,14 @@ import instance.java.GUI.GUIManager;
 import instance.java.Manager.EffectPresetManager;
 import instance.java.Manager.InstancesManager;
 import instance.java.Manager.PlayerVisitInstanceManager;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Objects;
+
 public class Instances extends JavaPlugin
 {
-
     private static Instances instance;
 
     public static Instances getInstance()
@@ -31,11 +34,9 @@ public class Instances extends JavaPlugin
         new InstancesManager();
         new PlayerVisitInstanceManager();
         new GUIManager();
-        new ConfigManager();
-        ConfigManager.getInstance().loadConfig();
-        new LanguageManager();
+        ConfigManager.loadConfig();
         EffectPresetManager.getInstance().loadEffectPresets();
-        LanguageManager.getInstance().loadLang();
+        LanguageManager.loadLang();
         InstancesManager.getInstance().loadInstances();
         regCommands();
         regEvents();
@@ -43,10 +44,10 @@ public class Instances extends JavaPlugin
 
     private void regCommands()
     {
-        this.getCommand("ijoin").setExecutor(new CommandJoinInstance());
-        this.getCommand("ileave").setExecutor(new CommandLeaveInstance());
-        this.getCommand("iready").setExecutor(new CommandLeaveInstance());
-        this.getCommand("istartreadycheck").setExecutor(new CommandStartPreReadyCheck());
+        Objects.requireNonNull(this.getCommand("ijoin")).setExecutor(new CommandJoinInstance());
+        Objects.requireNonNull(this.getCommand("ileave")).setExecutor(new CommandLeaveInstance());
+        Objects.requireNonNull(this.getCommand("iready")).setExecutor(new CommandPlayerReady());
+        Objects.requireNonNull(this.getCommand("istartreadycheck")).setExecutor(new CommandStartPreReadyCheck());
     }
 
     private void regEvents()
@@ -63,6 +64,6 @@ public class Instances extends JavaPlugin
     @Override
     public void onDisable()
     {
-
+        HandlerList.unregisterAll(this);
     }
 }

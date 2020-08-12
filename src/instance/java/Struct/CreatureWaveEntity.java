@@ -2,26 +2,26 @@ package instance.java.Struct;
 
 public class CreatureWaveEntity
 {
-    public final String mobname;
+    public final String mobName;
 
     public final int amount;
 
-    public final int creaturespawnpointid;
+    public final int creatureSpawnPointId;
 
-    public CreatureWaveEntity(String mobname, int amount, int sp)
+    public CreatureWaveEntity(String mobName, int amount, int sp)
     {
-        this.mobname = mobname;
+        this.mobName = mobName;
         this.amount = amount;
-        this.creaturespawnpointid = sp;
+        this.creatureSpawnPointId = sp;
     }
 
     @Override
     public String toString()
     {
         return "CreatureWaveEntity{" +
-                "mobname='" + mobname + '\'' +
+                "mobName='" + mobName + '\'' +
                 ", amount=" + amount +
-                ", sp=" + creaturespawnpointid +
+                ", sp=" + creatureSpawnPointId +
                 '}';
     }
 }

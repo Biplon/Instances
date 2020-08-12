@@ -1,7 +1,6 @@
 package instance.java.Config;
 
 import instance.java.Instances;
-import instance.java.Task.TaskCreatureWave;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -9,54 +8,44 @@ import java.io.File;
 
 public class LanguageManager
 {
-    static LanguageManager instance;
+    public static String joinWindowHeadText;
+    public static String playerText;
+    public static String ownInvText;
 
-    public LanguageManager()
-    {
-        instance = this;
-    }
+    public static String readyWindowHeadText;
+    public static String readyText;
+    public static String notReadyText;
 
-    public static LanguageManager getInstance()
-    {
-        return instance;
-    }
+    public static String leaveWindowHeadText;
+    public static String yesLeaveText;
+    public static String noLeaveText;
 
-    public String joinWindowHeadText;
-    public String playerText;
-    public String ownInvText;
+    public static String canNotJoinText;
+    public static String canNotJoinTextConsoleText;
+    public static String notInInstanceText;
+    public static String notInInstanceConsoleText;
 
-    public String readyWindowHeadText;
-    public String readyText;
-    public String notReadyText;
+    public static String groupFullText;
+    public static String ifReadyText;
 
-    public String leaveWindowHeadText;
-    public String yesLeaveText;
-    public String noLeaveText;
+    public static String joinedGroupText;
+    public static String groupText;
+    public static String playerNeedText;
+    public static String preStartText;
 
-    public String canNotJoinText;
-    public String canNotJoinTextConsoleText;
-    public String notInInstanceText;
-    public String notInInstanceConsoleText;
+    public static String playerLeaveInstanceText;
 
-    public String groupFullText;
-    public String ifReadyText;
+    public static String waveStartTimeText;
+    public static String waveStartedText;
+    public static String waveClearedText;
+    public static String winText;
+    public static String loseText;
 
-    public String joinedGroupText;
-    public String groupText;
-    public String playerNeedText;
-    public String preStartText;
+    public static String canNotStartReadyCheckText;
 
-    public String playerLeaveInstanceText;
+    public static String preStartTextClick;
 
-    public String waveStartTimeText;
-    public String waveStartedText;
-    public String waveClearedText;
-    public String winText;
-    public String loseText;
-
-    public String canNotStartReadyCheckText;
-
-    public void loadLang()
+    public static void loadLang()
     {
         File configFile = new File("plugins" + File.separator + Instances.getInstance().getName() + File.separator + Instances.getInstance().getConfig().getString("general.lang") + ".yml");
         FileConfiguration cfg = YamlConfiguration.loadConfiguration(configFile);
@@ -93,5 +82,7 @@ public class LanguageManager
         loseText = cfg.getString("loseText") != null ? cfg.getString("loseText") : "Instance failed!";
 
         canNotStartReadyCheckText = cfg.getString("canNotStartReadyCheckText") != null ? cfg.getString("canNotStartReadyCheckText") : "Cant start ready check";
+
+        preStartTextClick = cfg.getString("prestartTextClick") != null ? cfg.getString("prestartTextClick") : "[Click]";
     }
 }

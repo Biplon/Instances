@@ -20,7 +20,6 @@ public class PlayerInstanceKillSpecificCreature extends PlayerInstance
         super(config, id, path);
     }
 
-
     @Override
     public void resetInstance()
     {

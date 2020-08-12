@@ -290,9 +290,12 @@ public class PlayerInstanceConfig
                 isnext = false;
             }
         }
-        for (PlayerInstance pi : instances)
+        if (repetitives.size() > 0)
         {
-            pi.repetitives = repetitives;
+            for (PlayerInstance pi : instances)
+            {
+                pi.repetitives = repetitives;
+            }
         }
     }
 
@@ -410,7 +413,10 @@ public class PlayerInstanceConfig
                 {
                     instances[i] = new PlayerInstanceKillSpecificCreature(this, i, result.get(i));
                 }
-
+                else if (instancesType == EInstancesType.ReachObject)
+                {
+                    instances[i] = new PlayerInstanceReachObject(this, i, result.get(i));
+                }
             }
             return true;
         }
@@ -685,9 +691,9 @@ public class PlayerInstanceConfig
         {
             if (pi.isInUse())
             {
-                if (((PlayerInstanceReachObject) pi).getReachObjectLocation() == loc)
+                if (((PlayerInstanceReachObject)pi).getReachObjectLocation() == loc)
                 {
-                    pi.endInstance(true);
+                    ((PlayerInstanceReachObject)pi).setInstanceEnd(true);
                     return true;
                 }
             }

@@ -7,6 +7,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Objects;
+
 public class CommandPlayerReady implements CommandExecutor
 {
     @Override
@@ -31,7 +33,7 @@ public class CommandPlayerReady implements CommandExecutor
             {
                 if (Bukkit.getPlayer(args[0]) != null)
                 {
-                    GUIManager.getInstance().openReadyCheckGUI(Bukkit.getPlayer(args[0]));
+                    GUIManager.getInstance().openReadyCheckGUI(Objects.requireNonNull(Bukkit.getPlayer(args[0])));
                 }
                 return true;
             }
