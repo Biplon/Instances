@@ -21,7 +21,7 @@ public class TriggerOnCreatureDeath extends TriggerRegion
         return name;
     }
 
-    public TriggerOnCreatureDeath(int id, ProtectedRegion region, Effect myEffect, boolean singleUse, EntityType type, String name)
+    public TriggerOnCreatureDeath(int id, ProtectedRegion[] region, Effect myEffect, boolean singleUse, EntityType type, String name)
     {
         super(id, region, myEffect, singleUse);
         this.type = type;

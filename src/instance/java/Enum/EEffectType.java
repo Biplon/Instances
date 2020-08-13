@@ -10,7 +10,7 @@ public enum EEffectType
     TeleportPlayer,
     SendMessage,
     PlayerSound,
-    PlayerParticle,
+    Particle,
     GivePlayerPotionEffect,
     KillPlayer,
     GivePlayerItem,

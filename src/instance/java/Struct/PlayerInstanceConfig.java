@@ -1,6 +1,7 @@
 package instance.java.Struct;
 
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import instance.java.Effect.Effect;
 import instance.java.Enum.*;
 import instance.java.Instance.PlayerInstanceKillSpecificCreature;
 import instance.java.Instance.PlayerInstanceReachObject;
@@ -312,42 +313,42 @@ public class PlayerInstanceConfig
                 switch (type)
                 {
                     case OnCreatureDeath:
-                        trigger.add(new TriggerOnCreatureDeath(count, getSubRegions(Objects.requireNonNull(cfg.getString("trigger." + count + ".regionid"))), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")), cfg.getBoolean("trigger." + count + ".singleuse"), EntityType.valueOf(cfg.getString("trigger." + count + ".creaturetype")), cfg.getString("trigger." + count + ".creaturename")));
+                        trigger.add(new TriggerOnCreatureDeath(count, getSubRegions(Objects.requireNonNull(cfg.getString("trigger." + count + ".regionid"))),loadEffect(cfg,count) , cfg.getBoolean("trigger." + count + ".singleuse"), EntityType.valueOf(cfg.getString("trigger." + count + ".creaturetype")), cfg.getString("trigger." + count + ".creaturename")));
                         break;
                     case OnPlayerDeath:
-                        trigger.add(new TriggerOnPlayerDeath(count, getSubRegions(Objects.requireNonNull(cfg.getString("trigger." + count + ".regionid"))), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")), cfg.getBoolean("trigger." + count + ".singleuse")));
+                        trigger.add(new TriggerOnPlayerDeath(count, getSubRegions(Objects.requireNonNull(cfg.getString("trigger." + count + ".regionid"))), loadEffect(cfg,count), cfg.getBoolean("trigger." + count + ".singleuse")));
                         break;
                     case OnRegionEnter:
-                        trigger.add(new TriggerOnRegionEnter(count, getSubRegions(Objects.requireNonNull(cfg.getString("trigger." + count + ".regionid"))), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")), cfg.getBoolean("trigger." + count + ".singleuse")));
+                        trigger.add(new TriggerOnRegionEnter(count, getSubRegions(Objects.requireNonNull(cfg.getString("trigger." + count + ".regionid"))),loadEffect(cfg,count), cfg.getBoolean("trigger." + count + ".singleuse")));
                         break;
                     case OnRegionLeave:
-                        trigger.add(new TriggerOnRegionLeave(count, getSubRegions(Objects.requireNonNull(cfg.getString("trigger." + count + ".regionid"))), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")), cfg.getBoolean("trigger." + count + ".singleuse")));
+                        trigger.add(new TriggerOnRegionLeave(count, getSubRegions(Objects.requireNonNull(cfg.getString("trigger." + count + ".regionid"))), loadEffect(cfg,count), cfg.getBoolean("trigger." + count + ".singleuse")));
                         break;
                     case OnChat:
-                        trigger.add(new TriggerOnChat(count, getSubRegions(Objects.requireNonNull(cfg.getString("trigger." + count + ".regionid"))), cfg.getString("trigger." + count + ".text"), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")), cfg.getBoolean("trigger." + count + ".singleuse")));
+                        trigger.add(new TriggerOnChat(count, getSubRegions(Objects.requireNonNull(cfg.getString("trigger." + count + ".regionid"))), cfg.getString("trigger." + count + ".text"), loadEffect(cfg,count), cfg.getBoolean("trigger." + count + ".singleuse")));
                         break;
                     case OnBlockClick:
-                        trigger.add(new TriggerOnBlockClick(count, getTriggerLocations(cfg.getInt("trigger." + count + ".posid")), Material.valueOf(Objects.requireNonNull(cfg.getString("trigger." + count + ".material"))), cfg.getBoolean("trigger." + count + ".rightclick"), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")), cfg.getBoolean("trigger." + count + ".singleuse")));
+                        trigger.add(new TriggerOnBlockClick(count, getTriggerLocations(cfg.getInt("trigger." + count + ".posid")), Material.valueOf(Objects.requireNonNull(cfg.getString("trigger." + count + ".material"))), cfg.getBoolean("trigger." + count + ".rightclick"), loadEffect(cfg,count), cfg.getBoolean("trigger." + count + ".singleuse")));
                         break;
                     case OnClickWithItem:
                         if (cfg.getBoolean("trigger." + count + ".customitem"))
                         {
-                            trigger.add(new TriggerOnClickWithItem(count, getTriggerLocations(cfg.getInt("trigger." + count + ".posid")), cfg.getBoolean("trigger." + count + ".airclick"), cfg.getBoolean("trigger." + count + ".rightclick"), true, cfg.getString("trigger." + count + ".lore1"), Material.valueOf(Objects.requireNonNull(cfg.getString("trigger." + count + ".material"))), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")), cfg.getBoolean("trigger." + count + ".singleuse")));
+                            trigger.add(new TriggerOnClickWithItem(count, getTriggerLocations(cfg.getInt("trigger." + count + ".posid")), cfg.getBoolean("trigger." + count + ".airclick"), cfg.getBoolean("trigger." + count + ".rightclick"), true, cfg.getString("trigger." + count + ".lore1"), Material.valueOf(Objects.requireNonNull(cfg.getString("trigger." + count + ".material"))), loadEffect(cfg,count), cfg.getBoolean("trigger." + count + ".singleuse")));
                         }
                         else
                         {
-                            trigger.add(new TriggerOnClickWithItem(count, getTriggerLocations(cfg.getInt("trigger." + count + ".posid")), cfg.getBoolean("trigger." + count + ".airclick"), cfg.getBoolean("trigger." + count + ".rightclick"), false, Material.valueOf(Objects.requireNonNull(cfg.getString("trigger." + count + ".material"))), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")), cfg.getBoolean("trigger." + count + ".singleuse")));
+                            trigger.add(new TriggerOnClickWithItem(count, getTriggerLocations(cfg.getInt("trigger." + count + ".posid")), cfg.getBoolean("trigger." + count + ".airclick"), cfg.getBoolean("trigger." + count + ".rightclick"), false, Material.valueOf(Objects.requireNonNull(cfg.getString("trigger." + count + ".material"))), loadEffect(cfg,count), cfg.getBoolean("trigger." + count + ".singleuse")));
                         }
 
                         break;
                     case OnLeverChange:
-                        trigger.add(new TriggerOnLeverChange(count, getTriggerLocations(cfg.getInt("trigger." + count + ".posid")), cfg.getBoolean("trigger." + count + ".powered"), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")), cfg.getBoolean("trigger." + count + ".singleuse")));
+                        trigger.add(new TriggerOnLeverChange(count, getTriggerLocations(cfg.getInt("trigger." + count + ".posid")), cfg.getBoolean("trigger." + count + ".powered"), loadEffect(cfg,count), cfg.getBoolean("trigger." + count + ".singleuse")));
                         break;
                     case OnPressurePlateActivate:
-                        trigger.add(new TriggerOnPressurePlateActivate(count, getTriggerLocations(cfg.getInt("trigger." + count + ".posid")), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")), cfg.getBoolean("trigger." + count + ".singleuse")));
+                        trigger.add(new TriggerOnPressurePlateActivate(count, getTriggerLocations(cfg.getInt("trigger." + count + ".posid")), loadEffect(cfg,count), cfg.getBoolean("trigger." + count + ".singleuse")));
                         break;
                     case OnButtonClick:
-                        trigger.add(new TriggerOnButtonClick(count, getTriggerLocations(cfg.getInt("trigger." + count + ".posid")), EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid")), cfg.getBoolean("trigger." + count + ".singleuse")));
+                        trigger.add(new TriggerOnButtonClick(count, getTriggerLocations(cfg.getInt("trigger." + count + ".posid")), loadEffect(cfg,count), cfg.getBoolean("trigger." + count + ".singleuse")));
                         break;
                 }
                 count++;
@@ -356,6 +357,18 @@ public class PlayerInstanceConfig
             {
                 isnext = false;
             }
+        }
+    }
+
+    private Effect loadEffect(FileConfiguration cfg,int count)
+    {
+        if (cfg.getBoolean("trigger." + count + ".effect.ispreset"))
+        {
+           return EffectPresetManager.getInstance().getEffect(cfg.getInt("trigger." + count + ".effect.presetid"));
+        }
+        else
+        {
+           return EffectPresetManager.getInstance().createEffect(cfg,count);
         }
     }
 

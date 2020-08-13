@@ -5,14 +5,14 @@ import org.bukkit.Location;
 
 public abstract class TriggerCoordinates extends Trigger
 {
-    private final Location myLocation;
+    private final Location[] myLocation;
 
-    public Location getMyLocation()
+    public Location[] getMyLocation()
     {
         return myLocation;
     }
 
-    public TriggerCoordinates(int id, Location location, Effect myEffect, boolean singleUse)
+    public TriggerCoordinates(int id, Location[] location, Effect myEffect, boolean singleUse)
     {
         super(id, myEffect, singleUse);
         myLocation = location;

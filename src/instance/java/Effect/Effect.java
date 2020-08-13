@@ -15,6 +15,13 @@ public abstract class Effect
 
     EEffectType myType;
 
+    final double timer;
+
+    public double getTimer()
+    {
+        return timer;
+    }
+
     public int getId()
     {
         return id;
@@ -30,20 +37,11 @@ public abstract class Effect
         return hasPos;
     }
 
-    public Effect(int id, boolean hasPos, boolean allPlayer)
+    public Effect(int id, boolean hasPos, boolean allPlayer,double timer)
     {
         this.id = id;
         this.hasPos = hasPos;
         this.allPlayer = allPlayer;
-    }
-
-    public void startEffect(Player[] p)
-    {
-        //TODO implement startEffect player
-    }
-
-    public void startEffect(Location pos)
-    {
-        //TODO implement startEffect loc
+        this.timer = timer;
     }
 }

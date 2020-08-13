@@ -7,7 +7,7 @@ import org.bukkit.Location;
 public class TriggerOnPressurePlateActivate extends TriggerCoordinates
 {
 
-    public TriggerOnPressurePlateActivate(int id, Location location, Effect myEffect, boolean singleUse)
+    public TriggerOnPressurePlateActivate(int id, Location[] location, Effect myEffect, boolean singleUse)
     {
         super(id, location, myEffect, singleUse);
         myTrigger = ETriggerType.OnPressurePlateActivate;

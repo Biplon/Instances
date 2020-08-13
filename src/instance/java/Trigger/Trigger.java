@@ -2,6 +2,7 @@ package instance.java.Trigger;
 
 import instance.java.Effect.Effect;
 import instance.java.Enum.ETriggerType;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -44,6 +45,7 @@ public abstract class Trigger
 
     public void runEffect(Location loc)
     {
+        Bukkit.getLogger().info("effect triggered " + loc);
         //TODO implement
     }
 

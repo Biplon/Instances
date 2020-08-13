@@ -42,7 +42,7 @@ public class TriggerOnClickWithItem extends TriggerCoordinates
         return myMaterial;
     }
 
-    public TriggerOnClickWithItem(int id, Location location, boolean airClick, boolean rightClick, boolean customItem, Material myMaterial, Effect myEffect, boolean singleUse)
+    public TriggerOnClickWithItem(int id, Location[] location, boolean airClick, boolean rightClick, boolean customItem, Material myMaterial, Effect myEffect, boolean singleUse)
     {
         super(id, location, myEffect, singleUse);
         this.airClick = airClick;
@@ -52,7 +52,7 @@ public class TriggerOnClickWithItem extends TriggerCoordinates
         myTrigger = ETriggerType.OnClickWithItem;
     }
 
-    public TriggerOnClickWithItem(int id, Location location, boolean airClick, boolean rightClick, boolean customItem, String lore1, Material myMaterial, Effect myEffect, boolean singleUse)
+    public TriggerOnClickWithItem(int id, Location[] location, boolean airClick, boolean rightClick, boolean customItem, String lore1, Material myMaterial, Effect myEffect, boolean singleUse)
     {
         super(id, location, myEffect, singleUse);
         this.airClick = airClick;

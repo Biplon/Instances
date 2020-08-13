@@ -22,7 +22,7 @@ public class TriggerOnBlockClick extends TriggerCoordinates
         return clickAction;
     }
 
-    public TriggerOnBlockClick(int id, Location location, Material myMaterial, boolean rightClick, Effect myEffect, boolean singleUse)
+    public TriggerOnBlockClick(int id, Location[] location, Material myMaterial, boolean rightClick, Effect myEffect, boolean singleUse)
     {
         super(id, location,myEffect,singleUse);
         myTrigger = ETriggerType.OnBlockClick;
